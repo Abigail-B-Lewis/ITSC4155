@@ -12,11 +12,11 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.listen(port, () => {
+let server = app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
-
+server.close((e) => console.log('Server has closed'));
 //dummy data to show testing functionality - delete later
 function sum(a, b) {
     return a + b;
