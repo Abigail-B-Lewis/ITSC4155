@@ -15,3 +15,11 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
+
+
+//dummy data to show testing functionality - delete later
+function sum(a, b) {
+    return a + b;
+};
+
+module.exports = sum;
