@@ -55,3 +55,5 @@ User.sync({alter: false}).then(()=>{
 }).catch((err) => {
     console.log(err);
 })
+
+module.exports = User;
