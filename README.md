@@ -3,8 +3,8 @@ Repository for ITSC 4155-001 group project.
 
 # SETUP
 - run npm i to install all node modules
-- To connect to the database, navigate to the config folder, then to config.json
-- in config.json, add your username and password under development
+- To connect to the database, navigate to the models folder, then index.js
+- in index.js, add password
 - navigate to SQL folder, then to init.txt
 - Copy the text and paste it into your MySQL workbench, then run the code
 
