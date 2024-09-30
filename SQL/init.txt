@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS officeq;
+CREATE DATABASE officeq;
+USE officeq;
