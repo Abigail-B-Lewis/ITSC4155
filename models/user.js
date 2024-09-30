@@ -1,59 +1,53 @@
 const bcrypt = require('bcrypt');
-const {Sequelize,sequelize} = require('./index.js');
 
-
-
-const User = sequelize.define('user', {
+module.exports = (sequelize, Sequelize) => {
+  const User = sequelize.define('user', {
     fullName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-            isEmail: true
-        },
-        unique: true,
-        primaryKey: true,
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
+      unique: true,
+      primaryKey: true,
     },
     password: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     role: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-            isIn: [['instructor', 'student']]
-        },
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [['instructor', 'student']],
+      },
     },
-},
-{
+  }, 
+  {
+    timestamps: false,
+  },
+  {
     hooks: {
-        beforeValidate: (user) => {
-            if (user.password) {
-                return bcrypt.hash(user.password, 10)
-                .then(hash => {
-                    user.password = hash;
-                }).catch(err =>{
-                    console.log(err);
-                });
-            }
-        },
+      beforeValidate: async (user) => {
+        if (user.password) {
+          try {
+            const hash = await bcrypt.hash(user.password, 10);
+            user.password = hash;
+          } catch (err) {
+            console.log('Error hashing password:', err);
+          }
+        }
+      },
     },
-});
+  });
 
-User.prototype.validPassword = async function(inputPassword) {
+  User.prototype.validPassword = async function (inputPassword) {
     return bcrypt.compare(inputPassword, this.password);
+  };
+
+  return User;
 };
-
-User.sync({alter: false}).then(()=>{
-    return User.create({fullName: 'Abigail Lewis', email: 'Abby66@gmail.com', password: '123123', role: 'student'})
-}).then((user) => {
-    console.log('User added to database');
-}).catch((err) => {
-    console.log(err);
-})
-
-module.exports = User;

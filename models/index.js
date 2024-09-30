@@ -1,10 +1,13 @@
-'use stric'
+'use strict'
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'ADD PASSWORD!', {
+const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
+
+const User = require('./user.js')(sequelize, Sequelize);
+const Course = require('./course.js')(sequelize, Sequelize);
 
 sequelize.authenticate().then(()=>{
   console.log("Connection successful");
@@ -12,7 +15,15 @@ sequelize.authenticate().then(()=>{
   console.log("Error connecting to the database");
 });
 
-module.exports = {Sequelize, sequelize};
+sequelize.sync({ alter: true }) 
+  .then(() => {
+    console.log("All models were synchronized successfully.");
+  })
+  .catch((err) => {
+    console.log("Error syncing models to the database: ", err);
+  });
+
+  module.exports = {Sequelize, sequelize};
 
 // 'use strict';
 

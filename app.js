@@ -2,7 +2,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const db = require('./models');
-const User = require('./models/user')
 
 //create app
 const app = express();
