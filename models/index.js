@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'ADD PASSWORD!', {
+const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
 
@@ -12,7 +12,17 @@ sequelize.authenticate().then(()=>{
   console.log("Error connecting to the database");
 });
 
-module.exports = {Sequelize, sequelize};
+const User = require('./user.js')(sequelize, Sequelize);
+
+sequelize.sync({ alter: true }) 
+  .then(() => {
+    console.log("All models were synchronized successfully.");
+  })
+  .catch((err) => {
+    console.log("Error syncing models to the database: ", err);
+  });
+
+  module.exports = {Sequelize, sequelize, User};
 
 // 'use strict';
 

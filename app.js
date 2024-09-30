@@ -2,7 +2,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const db = require('./models');
-const User = require('./models/user')
+const userRoutes = require('./routes/userRoutes.js')
 
 //create app
 const app = express();
@@ -13,6 +13,10 @@ const port = 3000;
 app.get('/', (req, res) => {
     res.send('Hello World! This is your first sample web application.');
 });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/users', userRoutes);
 
 // db.sequelize.sync({force: false}).then(() => {
 //     app.listen(port, () => {
