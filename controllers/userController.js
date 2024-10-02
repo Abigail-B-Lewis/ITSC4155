@@ -26,15 +26,15 @@ exports.login = (req, res) => {
             .then(result => {
                 if(result){
                     console.log('login success')
-                    //TODO: where should they be directed?
-                    //Add user to session
+                    req.session.user = user.id;
+                    res.send('Login success');
                 }else{
-                    console.log('login failed')
+                    res.send('login failure')
                 }
             })
             .catch(err => next(err))
         }else{
-            console.log('email does not exist')
+            console.log('email does not exist');
         }
     }).catch(err => next(err));
 }
