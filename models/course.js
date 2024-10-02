@@ -14,11 +14,13 @@ module.exports = (sequelize, Sequelize) => {
       },
       studentAccessCode: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       iaAccessCode: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
       }
       // TODO: add foreign key link to schedule in sprint 2
     },
