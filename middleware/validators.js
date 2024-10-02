@@ -17,6 +17,7 @@ exports.validateResult = (req, res, next) => {
         //TODO: add flash messages - might be in later sprint
         return res.redirect('back');
     }else{
+        console.log('successful validation'); 
         return next();
     }
 }
