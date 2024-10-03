@@ -1,8 +1,8 @@
-'use stric'
+'use strict'
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
+const sequelize = new Sequelize('officeq', 'root', 'ADD PASSWORD HERE', {
   dialect: 'mysql'
 });
 
