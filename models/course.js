@@ -4,9 +4,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      //should probably add enum for this attribute?
       courseSemester: {
         type: Sequelize.STRING,
         allowNull: false,
+        isIn: [['Fall 2024', 'Spring 2025', 'Fall 2025', 'Spring 2026']],
       },
       instructorName: {
         type: Sequelize.STRING,
