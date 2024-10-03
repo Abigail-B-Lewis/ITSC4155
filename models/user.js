@@ -29,8 +29,6 @@ module.exports = (sequelize, Sequelize) => {
   }, 
   {
     timestamps: false,
-  },
-  {
     hooks: {
       beforeValidate: async (user) => {
         if (user.password) {
