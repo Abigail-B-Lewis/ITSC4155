@@ -1,8 +1,12 @@
 //modules
 const express = require('express');
 const mysql = require('mysql2');
+const session = require('express-session');
+const sequelize = require('./models/index.js');
 const db = require('./models');
 const courseRoutes = require('./routes/courseRoutes');
+const User = require('./models/user')
+const userRoutes = require('./routes/userRoutes');
 
 //create app
 const app = express();
@@ -17,6 +21,15 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/courses', courseRoutes);
+
+app.use(session({
+    secret: '1342534634534534',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {maxAge: 10000}
+}));
+
+app.use('/users', userRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
