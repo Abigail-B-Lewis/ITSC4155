@@ -1,0 +1,24 @@
+<%- include('./partials/header.ejs') %>
+
+<form method="post" action="/signup">
+  <h2>Sign Up</h2>
+    <label for="Name"><b>Name</b></label>
+    <input type="text" name="Name" required>
+
+    <label for="Email"><b>Email</b></label>
+    <input type="text" name="Email" required>
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" name="Password" required>
+
+    <label for="role"><b>Role</b></label>
+    <select id="role" name="role" required>
+        <option value="Instructor">Instructor</option>
+        <option value="Student">Student</option>
+    </select>
+    <p>
+      <button type="submit">Sign Up</button>
+    </p>
+</form>
+
+<%- include('./partials/footer.ejs') %>

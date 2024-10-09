@@ -7,3 +7,8 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
     console.log("Here is where a new user is added to the db");
 };
+
+exports.new = (req, res) => {
+    res.render('signup');
+    console.log('sign up controller in use');
+}
