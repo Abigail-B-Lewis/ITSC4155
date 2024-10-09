@@ -16,4 +16,6 @@ router.get('/login', controller.getLogin);
 //authenticate user
 router.post('/login', validateLogIn, validateResult, controller.login)
 
+router.get('/logout', controller.logout);
+
 module.exports = router;
