@@ -15,7 +15,7 @@ exports.create = (req, res) => {
     }).catch(err => {
         //TODO: proper error handling
         console.log(err);
-    console.log("Here is where a new user is added to the db");
+    });
 };
 
 exports.getLogin = (req, res) => {
@@ -55,4 +55,4 @@ exports.logout = (res, req) => {
             res.redirect('/')
         }
     });
-}
+};
