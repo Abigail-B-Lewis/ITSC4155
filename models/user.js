@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const { uuid } = require('uuidv4');
-
+ 
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define('user', {
     id: {

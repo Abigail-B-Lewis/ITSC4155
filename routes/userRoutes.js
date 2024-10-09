@@ -10,7 +10,7 @@ router.get('/', controller.index);
 router.get('/new', controller.new);
 
 //post a new user to the database
-router.post('/', controller.create);
+router.post('/', validateSignUp, validateResult, controller.create);
 
 //get login - might update?
 router.get('/login', controller.getLogin);
