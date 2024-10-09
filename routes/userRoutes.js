@@ -4,10 +4,20 @@ const {validateLogIn, validateSignUp, validateResult} = require('../middleware/v
 
 const router = express.Router();
 
-//get homepage - create an account/log in
+//get 
 router.get('/', controller.index);
+
+router.get('/new', controller.new);
 
 //post a new user to the database
 router.post('/', validateSignUp, validateResult, controller.create);
+
+//get login - might update?
+router.get('/login', controller.getLogin);
+
+//authenticate user
+router.post('/login', validateLogIn, validateResult, controller.login)
+
+router.get('/logout', controller.logout);
 
 module.exports = router;
