@@ -1,16 +1,17 @@
 const {User} = require('../models/index.js');
 
 exports.new = (req, res) => {
-    console.log("Here is the create an account/log in page");
-    //render view if necessary, depends on where front-end puts this form.
+    res.render('./signup')
 }
   
 exports.create = (req, res) => {
     let user = req.body;
+    console.log(user);
     User.create({fullName: user.fullName, email: user.email, password: user.password, role: user.role})
     .then(user => {
         //TODO: figure out how front-end is displaying login/register forms
         //and redirect to login once account is created.
+        res.redirect('/users/login')
         console.log('user created successfully!', user.email);
     }).catch(err => {
         //TODO: proper error handling
@@ -19,7 +20,7 @@ exports.create = (req, res) => {
 };
 
 exports.getLogin = (req, res) => {
-    console.log("Here is the login page")
+    res.render('./login')  
     //render view if necessary, depends on where front-end puts this form
 }
 
@@ -35,20 +36,21 @@ exports.login = (req, res) => {
                 if(result){
                     console.log('login success')
                     req.session.user = user.id;
-                    res.send('Login success');
+                    //fix this, do res.redirect() instead of res.render()
+                    res.render('./officeHours/dashboard');
                 }else{
                     res.send('login failure')
                 }
             })
-            .catch(err => next(err))
+            .catch(err => console.log(err))
         }else{
             console.log('email does not exist');
         }
     }).catch(err => next(err));
 }
 
-exports.logout = (res, req) => {
-    req.session.destroy(err =>{
+exports.logout = (req, res) => {
+    req.session.destroy(err =>{  
         if(err){
             next(err)
         }else{

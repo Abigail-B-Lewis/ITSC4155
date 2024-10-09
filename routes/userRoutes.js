@@ -5,7 +5,7 @@ const {validateLogIn, validateSignUp, validateResult} = require('../middleware/v
 const router = express.Router();
 
 //get 
-router.get('/', controller.index);
+// router.get('/', controller.index);  
 
 router.get('/new', controller.new);
 
