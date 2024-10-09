@@ -149,3 +149,16 @@ a.forgot-password {
 a.forgot-password:hover {
   text-decoration: underline;
 }
+input[type="submit"]{
+  width: 100%;
+  background-color: #A49665;
+  color: black;
+  font-family:"Inter";
+  padding: 10px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  align-items: center;
+  font-weight: bold;
+}
