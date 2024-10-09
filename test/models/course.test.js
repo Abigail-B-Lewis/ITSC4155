@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 //TODO: when time permits, set up a config.js or env file to deal with whether you are
 //connecting to the test database or dev database.
-const sequelize = new Sequelize('officeq_test', 'root', 'ADD PASSWORD HERE', {
+const sequelize = new Sequelize('officeq_test', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
 
@@ -11,7 +11,6 @@ const Course = require('../../models/course.js')(sequelize, Sequelize);
 
 describe('Course Model', () => {
     beforeAll(async() => {
-        await sequelize.authenticate();
         await sequelize.sync({ alter: true });
     });
     afterAll(async() => {
