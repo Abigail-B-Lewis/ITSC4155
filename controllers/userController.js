@@ -4,7 +4,7 @@ exports.new = (req, res) => {
     console.log("Here is the create an account/log in page");
     //render view if necessary, depends on where front-end puts this form.
 }
-
+  
 exports.create = (req, res) => {
     let user = req.body;
     User.create({fullName: user.fullName, email: user.email, password: user.password, role: user.role})
