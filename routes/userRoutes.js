@@ -4,7 +4,9 @@ const {validateLogIn, validateSignUp, validateResult} = require('../middleware/v
 
 const router = express.Router();
 
-//get registration - might update based on views?
+//get 
+router.get('/', controller.index);
+
 router.get('/new', controller.new);
 
 //post a new user to the database
