@@ -20,4 +20,7 @@ router.post('/login', validateLogIn, validateResult, controller.login)
 
 router.get('/logout', controller.logout);
 
+//sign up page route - need to discuss how many pages we are rendering prior to sprint to have correct number of routes
+router.get('/signup', controller.new);
+
 module.exports = router;

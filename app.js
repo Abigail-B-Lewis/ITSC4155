@@ -4,7 +4,8 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const sequelize = require('./models/index.js');
 const db = require('./models');
-const userRoutes = require('./routes/userRoutes.js')
+const User = require('./models/user')
+const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 
 //create app
@@ -12,9 +13,15 @@ const app = express();
 
 //configure app
 const port = 3000;
+app.set('view engine', 'ejs');
 
+//Allows for CSS to be used from the Public folder
+app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
+
+//Index page rendering from User Routes
 app.get('/', (req, res) => {
-    res.send('Hello World! This is your first sample web application.');
+    res.render('login');
 });
 
 app.use(express.json());
