@@ -1,7 +1,14 @@
 const bcrypt = require('bcrypt');
-
+const { uuid } = require('uuidv4');
+ 
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define('user', {
+    id: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+      primaryKey: true
+    },
     fullName: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -12,8 +19,7 @@ module.exports = (sequelize, Sequelize) => {
       validate: {
         isEmail: true,
       },
-      unique: true,
-      primaryKey: true,
+      unique: true, 
     },
     password: {
       type: Sequelize.STRING,
@@ -31,6 +37,7 @@ module.exports = (sequelize, Sequelize) => {
     timestamps: false,
     hooks: {
       beforeValidate: async (user) => {
+        user.id = uuid();
         if (user.password) {
           try {
             const hash = await bcrypt.hash(user.password, 10);
@@ -41,7 +48,7 @@ module.exports = (sequelize, Sequelize) => {
         }
       },
     },
-  });
+  }); 
 
   User.prototype.validPassword = async function (inputPassword) {
     return bcrypt.compare(inputPassword, this.password);
