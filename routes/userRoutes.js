@@ -7,6 +7,7 @@ const router = express.Router();
 //get 
 // router.get('/', controller.index);  
 
+//TODO: get rid of one of these. two routes to same controller. 
 router.get('/new', controller.new);
 
 //post a new user to the database
