@@ -1,7 +1,7 @@
 const {Course} = require('../models/index.js');
 
 exports.index = (req, res) => {
-    console.log("Here is the add a new course page - instructors only!");
+    res.render('./officeHours/dashboard');
 }
 
 exports.create = (req, res) => {

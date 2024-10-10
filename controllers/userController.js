@@ -36,8 +36,7 @@ exports.login = (req, res) => {
                 if(result){
                     console.log('login success')
                     req.session.user = user.id;
-                    //fix this, do res.redirect() instead of res.render()
-                    res.render('./officeHours/dashboard');
+                    res.redirect('/courses');
                 }else{
                     res.send('login failure')
                 }
@@ -46,15 +45,16 @@ exports.login = (req, res) => {
         }else{
             console.log('email does not exist');
         }
-    }).catch(err => next(err));
+    }).catch(err => console.log(err));
 }
 
 exports.logout = (req, res) => {
     req.session.destroy(err =>{  
         if(err){
-            next(err)
-        }else{
-            res.redirect('/')
+            console.log('Logout unsuccessful');
+        }else{  
+            console.log('Logout successful')
+            res.redirect('/users/login');
         }
     });
 };
