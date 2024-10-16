@@ -1,9 +1,10 @@
 const {uuid} = require('uuidv4');
+const {User} = require('.')
 
 module.exports = (sequelize, Sequelize) => {
     const Course = sequelize.define('course', {
       id: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         allowNull: false,
         unique: true,
         primaryKey: true
@@ -14,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       //should probably add enum for this attribute?
       courseSemester: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING,  
         allowNull: false,
         isIn: [['Fall 2024', 'Spring 2025', 'Fall 2025', 'Spring 2026']],
       },
