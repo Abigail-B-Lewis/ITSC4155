@@ -7,6 +7,7 @@ const db = require('./models');
 const User = require('./models/user')
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const flash = require('connect-flash');
 
 //create app
 const app = express();
@@ -22,8 +23,12 @@ app.use(session({
     cookie: {maxAge: 30*60*10}
 }));
 
+app.use(flash());
+
 app.use((req, res, next) => {
     res.locals.user = req.session.user||null;
+    res.locals.errorMessages = req.flash('error');
+    res.locals.successMessages = req.flash('success');
     next();
 });
 
