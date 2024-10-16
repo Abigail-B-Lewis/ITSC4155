@@ -2,14 +2,14 @@
 <div class="courses">
     <h2>My Courses</h2>
     <h2>Create Courses</h2>
-    <form action="/" method="post">
+    <form action="/courses" method="post">
         <p>
             <label for="course">Course Name</label>
-            <input title="Course Name" type="text" id="course" name="course">
+            <input title="Course Name" type="text" id="course" name="courseName">
         </p>
         <p>
             <label for="semester">Course Semester</label>
-            <select name="semester" id="semester">
+            <select name="courseSemester" id="semester">
                 <option value="Fall 2024">Fall 2024</option>
                 <option value="Spring 2025">Spring 2025</option>
                 <option value="Fall 2025">Fall 2025</option>
@@ -17,11 +17,11 @@
         </p>
         <p>
             <label for="ia">IA Access Code</label>
-            <input title="IA" type="text" id="ia" name="ia">
+            <input title="IA" type="text" id="ia" name="iaAccessCode">
         </p>
         <p>
             <label for="student">Student Access Code</label>
-            <input title="Student" type="text" id="student" name="student">
+            <input title="Student" type="text" id="student" name="studentAccessCode">
         </p>
         <input type="submit" value="Create">
     </form>

@@ -27,7 +27,6 @@ exports.getLogin = (req, res) => {
 exports.login = (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
-
     User.findOne({where: {email: email}})
     .then(user => {
         if(user){
@@ -36,9 +35,10 @@ exports.login = (req, res) => {
                 if(result){
                     console.log('login success')
                     req.session.user = user.id;
+                    req.session.user.role = user.role;
                     res.redirect('/courses');
                 }else{
-                    res.send('login failure')
+                    console.log('login failure - incorrect password')
                 }
             })
             .catch(err => console.log(err))

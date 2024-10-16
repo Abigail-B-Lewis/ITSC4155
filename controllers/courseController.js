@@ -7,7 +7,8 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
     let course = req.body;
     console.log(course);
-    Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorName: course.instructorName, studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
+    console.log(req.session.user);
+    Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorId: req.session.user , studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
     .then(course => {
         //where to redirect once course is created?
         console.log('Course created successfully!', course.courseName);

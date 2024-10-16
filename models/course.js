@@ -1,5 +1,13 @@
+const {uuid} = require('uuidv4');
+
 module.exports = (sequelize, Sequelize) => {
     const Course = sequelize.define('course', {
+      id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        primaryKey: true
+      },
       courseName: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -10,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         isIn: [['Fall 2024', 'Spring 2025', 'Fall 2025', 'Spring 2026']],
       },
-      instructorName: {
+      instructorId: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -28,6 +36,11 @@ module.exports = (sequelize, Sequelize) => {
     },
     {
         timestamps: false,
+        hooks: {       
+          beforeValidate: async (user) => {
+            user.id = uuid();
+          },
+        },
     }
   );
   

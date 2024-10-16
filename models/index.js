@@ -9,6 +9,8 @@ const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
 const User = require('./user.js')(sequelize, Sequelize);
 const Course = require('./course.js')(sequelize, Sequelize);
 
+
+
 sequelize.authenticate().then(()=>{
   console.log("Connection successful");
 }).catch((err) => {
