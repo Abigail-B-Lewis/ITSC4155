@@ -88,7 +88,14 @@ h2 {
   text-align: center;
   font-family: "Inter";
 }
-
+.courses h2{
+  position: relative;
+  top: -40px;
+}
+.courses form{
+  position: relative;
+  top: -50px;
+}
 label {
   font-family: "Inter";
   display: block;
@@ -105,7 +112,14 @@ input[type="password"] {
   border-radius: 4px;
   font-size: 14px;
 }
-
+select[id=semester]{
+  width: 98.9%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
 select[id=role] {
   font-family: "Inter";
   width: 100%;
