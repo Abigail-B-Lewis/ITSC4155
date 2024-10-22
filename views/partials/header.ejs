@@ -30,3 +30,32 @@
             </div>
             
         </header>
+        <%if(errorMessages.length > 0){
+            errorMessages.forEach(message => {%>
+                <div class="error">
+                    <p><%= message%></p>
+                    <p class="exit">X</p>
+                </div>
+            <%});
+        }%>
+        <%if(successMessages.length > 0){
+            successMessages.forEach(message => {%>
+                <div class="success">
+                    <p><%= message%></p>
+                    <p class="exit">X</p>
+                </div>
+            <%});
+        }%>
+    
+        <script>
+            exit_btns = Array.from(document.getElementsByClassName('exit'));
+            exit_btns.forEach(btn => {
+                btn.addEventListener('click', deleteMessage);
+            });
+    
+            function deleteMessage(e){
+                message = e.target.parentElement;
+                message.remove();
+                return;
+            }
+        </script>

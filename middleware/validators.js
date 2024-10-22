@@ -10,6 +10,24 @@ exports.validateSignUp = [body('fullName', 'full name cannot be empty').notEmpty
 exports.validateLogIn = [body('email', 'email must be a valid email address').isEmail().notEmpty().trim().escape(),
     body('password', 'password cannot be empty').notEmpty().trim().escape()];
 
+exports.isGuest = (req, res, next) => {
+    if(!req.session.user){
+        return next();
+    }else{
+        req.flash('error', 'Cannot access resource: Already logged in');
+        return res.redirect('/courses');
+    }
+};
+    
+exports.isLoggedIn = (req, res, next) => { 
+    if(req.session.user){
+        return next();
+    }else{
+        req.flash('error', 'Cannot access resource: You need to log in');
+        return res.redirect('/users/login')
+    }
+};
+
 exports.validateResult = (req, res, next) => {
     let errors = validationResult(req);
     if(!errors.isEmpty()){
