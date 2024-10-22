@@ -33,17 +33,18 @@ exports.login = (req, res) => {
             user.validPassword(password)
             .then(result => {
                 if(result){
-                    console.log('login success')
                     req.session.user = user.id;
                     req.session.user.role = user.role;
                     res.redirect('/courses');
                 }else{
-                    console.log('login failure - incorrect password')
+                    req.flash('error', 'Incorrect password entered. Please try again');
+                    res.redirect('back');
                 }
             })
             .catch(err => console.log(err))
         }else{
-            console.log('email does not exist');
+            req.flash('error', 'email is not associated with an existing account');
+            res.redirect('back');
         }
     }).catch(err => console.log(err));
 }
@@ -51,9 +52,9 @@ exports.login = (req, res) => {
 exports.logout = (req, res) => {
     req.session.destroy(err =>{  
         if(err){
-            console.log('Logout unsuccessful');
+            req.flash('error', 'Unable to log out');
         }else{  
-            console.log('Logout successful')
+            req.flash('success', 'logged out successfully');
             res.redirect('/users/login');
         }
     });

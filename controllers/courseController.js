@@ -11,7 +11,9 @@ exports.create = (req, res) => {
     Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorId: req.session.user , studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
     .then(course => {
         //where to redirect once course is created?
+        req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
+        res.redirect(back);
     }).catch(err => {
         //TODO: proper error handling
         console.log(err);
