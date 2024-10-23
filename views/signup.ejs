@@ -1,24 +1,24 @@
 <%- include('./partials/header.ejs') %>
+<main>
+  <form method="POST" action="/users">
+    <h2>Sign Up</h2>
+      <label for="Name"><b>Name</b></label>
+      <input type="text" name="fullName" required>
 
-<form method="POST" action="/users">
-  <h2>Sign Up</h2>
-    <label for="Name"><b>Name</b></label>
-    <input type="text" name="fullName" required>
+      <label for="Email"><b>Email</b></label>
+      <input type="text" name="email" required>
 
-    <label for="Email"><b>Email</b></label>
-    <input type="text" name="email" required>
+      <label for="password"><b>Password</b></label>
+      <input type="password" name="password" required>
 
-    <label for="password"><b>Password</b></label>
-    <input type="password" name="password" required>
-
-    <label for="role"><b>Role</b></label>
-    <select id="role" name="role" required>
-        <option value="instructor">Instructor</option>
-        <option value="student">Student</option>
-    </select>
-    <p>
-      <button type="submit">Sign Up</button>
-    </p>
-</form>
-
+      <label for="role"><b>Role</b></label>
+      <select id="role" name="role" required>
+          <option value="instructor">Instructor</option>
+          <option value="student">Student</option>
+      </select>
+      <p>
+        <button type="submit">Sign Up</button>
+      </p>
+  </form>
+</main>
 <%- include('./partials/footer.ejs') %>

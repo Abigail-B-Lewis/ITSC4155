@@ -1,21 +1,21 @@
 <%- include('./partials/header.ejs') %>
-
-<form method="post" action="/users/login">
-  <h2>Log In</h2>
-    <p>
-      <label for="email"><b>Email</b></label>
-      <input type="text" name="email" id="email" required>
-    </p>
-    <p>
-      <label for="password"><b>Password</b></label>
-      <input type="password" name="password" id="password" required>
-    </p>
-    <p>
-      <a href="/forgot-password" class="forgot-password">Forgot password?</a>
-    </p>
-    <p>
-      <button type="submit">Log In</button>
-    </p>
-  </form>
-
+<main>
+  <form method="post" action="/users/login">
+    <h2>Log In</h2>
+      <p>
+        <label for="email"><b>Email</b></label>
+        <input type="text" name="email" id="email" required>
+      </p>
+      <p>
+        <label for="password"><b>Password</b></label>
+        <input type="password" name="password" id="password" required>
+      </p>
+      <p>
+        <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+      </p>
+      <p>
+        <button type="submit">Log In</button>
+      </p>
+    </form>
+</main>
   <%- include('./partials/footer.ejs') %>
