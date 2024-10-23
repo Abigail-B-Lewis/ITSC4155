@@ -10,6 +10,17 @@ exports.validateSignUp = [body('fullName', 'full name cannot be empty').notEmpty
 exports.validateLogIn = [body('email', 'email must be a valid email address').isEmail().notEmpty().trim().escape(),
     body('password', 'password cannot be empty').notEmpty().trim().escape()];
 
+exports.validateId = (req, res, next) => {
+    id = req.params.id;
+    if(id.match(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/)) {
+        return next();
+    }else{
+        //TODO: add proper error handling - 400 error
+        //send to error page
+        console.log('invalid id entered');
+    }
+}
+
 exports.isGuest = (req, res, next) => {
     if(!req.session.user){
         return next();
