@@ -143,6 +143,7 @@ select[id=role] {
 
 button {
   width: 100%;
+  margin-top: 1rem;
   background-color: #A49665;
   color: black;
   font-family:"Inter";
