@@ -4,7 +4,7 @@ exports.new = (req, res) => {
     res.render('./signup')
 }
   
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
     let user = req.body;
     console.log(user);
     User.create({fullName: user.fullName, email: user.email, password: user.password, role: user.role})
@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         console.log('user created successfully!', user.email);
     }).catch(err => {
         //TODO: proper error handling
-        console.log(err);
+        next(err);
     });
 };
 
@@ -24,7 +24,7 @@ exports.getLogin = (req, res) => {
     //render view if necessary, depends on where front-end puts this form
 }
 
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     let email = req.body.email;
     let password = req.body.password;
     User.findOne({where: {email: email}})
@@ -46,7 +46,7 @@ exports.login = (req, res) => {
             req.flash('error', 'email is not associated with an existing account');
             res.redirect('back');
         }
-    }).catch(err => console.log(err));
+    }).catch(err => next(err));
 }
 
 exports.logout = (req, res) => {

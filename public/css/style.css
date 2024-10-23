@@ -1,71 +1,95 @@
-/*Nav Bar Styling */
-ul {
-    list-style-type: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-    gap: 20px;
-    background-color: #005035;
-  }
-
-.navbar h1{
-  color: #F5F8F7;
-  font-size: 50px;
+/* Global Reset to remove default spacing */
+* {
   margin: 0;
-  padding-left: 50px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.navbar ul li{
-  display: inline-flex;
+/* Ensure no horizontal scroll */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
+  background-color: #F5F8F7;
+}
+
+/* Header Styling */
+.navbar {
+  background-color: #005035;
   color: #F5F8F7;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: space-between; /* Evenly spaces elements in the header */
+  align-items: center;
+  padding: 20px 50px; /* Padding for spacing */
+  width: 100%;
+  position: fixed; /* Keeps the header at the top */
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h1 {
+  font-size: 50px;
+  margin: 0;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
   gap: 20px;
   margin: 0;
-  padding-right: 70px;
-  align-items: center;
+}
+
+.navbar ul li {
+  color: #F5F8F7;
   font-weight: bold;
 }
 
-.navbar ul li:hover{
-  text-decoration: underline;
-}
-
-a{
+.navbar ul li a {
   text-decoration: none;
   color: #F5F8F7;
   font-size: 25px;
 }
 
-.navbar{
-    font-family: "Inter";
-    font-size: large;
-    background-color: #005035;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 50px;
+.navbar ul li:hover a {
+  text-decoration: underline;
 }
 
-/*Footer Styling*/
-.footer{
-  font-family: "Inter";
-  font-size: large;
+/* Ensure the content below doesn't overlap the fixed header */
+main {
+  padding-top: 200px; /* You can adjust to the header's height */
+}
+
+/* Footer Styling */
+.footer {
   background-color: #005035;
-  padding: 10px;
-  display: flex;
   color: #F5F8F7;
-  text-align: center;
-  position: absolute;
-  width: 100%;
+  font-family: "Inter", sans-serif;
+  padding: 20px 50px; /* Padding for spacing */
+  display: flex;
+  justify-content: space-between; /* Evenly spaces elements in the footer */
+  align-items: center;
+  position: fixed; /* Sticks the footer to the bottom */
   bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
-.footer ul{
-  font-family: "Inter";
-  font-size: large;
-  background-color: #005035;
-  padding-top: 20px;
-  padding-left: 60%;
-  
+.footer ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.footer li {
+  cursor: pointer;
+}
+
+.footer li:hover {
+  text-decoration: underline;
 }
 
 /*Background of page*/
@@ -133,6 +157,7 @@ select[id=role] {
 
 button {
   width: 100%;
+  margin-top: 1rem;
   background-color: #A49665;
   color: black;
   font-family:"Inter";

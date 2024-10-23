@@ -50,3 +50,20 @@ app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
+//error handling
+app.use((req, res, next) => {
+    let err = new Error('The server cannot locate ' + req.url);
+    err.status = 404;
+    next(err);
+});
+
+//should always be last in my routes
+app.use((err, req, res, next) => {
+    console.log(err.stack);
+    if(!err.status) {
+        err.status = 500;
+        err.message = ("Internal Server Error");
+    }
+    res.status(err.status);
+    res.render('error', {error: err});
+});
