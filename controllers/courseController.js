@@ -2,6 +2,7 @@ const {Course} = require('../models/index.js');
 
 exports.index = (req, res) => {
     res.render('./officeHours/dashboard');
+    //needs more implementation to render courses the user is part of
 }
 
 exports.create = (req, res) => {
