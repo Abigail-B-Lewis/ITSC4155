@@ -11,7 +11,7 @@ exports.validateLogIn = [body('email', 'email must be a valid email address').is
     body('password', 'password cannot be empty').notEmpty().trim().escape()];
 
 exports.isGuest = (req, res, next) => {
-    if(!req.session.user){
+    if(!req.session.user){ 
         return next();
     }else{
         req.flash('error', 'Cannot access resource: Already logged in');
