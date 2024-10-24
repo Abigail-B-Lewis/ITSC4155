@@ -22,7 +22,7 @@ exports.validateId = (req, res, next) => {
 }
 
 exports.isGuest = (req, res, next) => {
-    if(!req.session.user){
+    if(!req.session.user){ 
         return next();
     }else{
         req.flash('error', 'Cannot access resource: Already logged in');

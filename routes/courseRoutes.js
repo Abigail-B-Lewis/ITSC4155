@@ -4,7 +4,7 @@ const {isLoggedIn, validateId} = require('../middleware/validators');
 
 const router = express.Router();
 
-//get dashboard page
+//get dashboard page - right now this renders the instructor dashboard
 router.get('/', isLoggedIn, controller.index);
 
 //post a new course to the database
@@ -12,4 +12,4 @@ router.post('/', controller.create);
 
 router.get('/:id', validateId, controller.show);
 
-module.exports = router;
+module.exports = router;  
