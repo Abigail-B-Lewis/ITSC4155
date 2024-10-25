@@ -1,3 +1,5 @@
+const { uuid } = require('uuidv4');
+
 module.exports = (sequelize, Sequelize) => {
     const Schedule = sequelize.define('Schedule', {
         id: {

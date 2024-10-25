@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
+const sequelize = new Sequelize('officeq', 'root', 'password!', {
   dialect: 'mysql'
 });
 
@@ -43,7 +43,7 @@ sequelize.sync({ alter: true })
     console.log("Error syncing models to the database: ", err);
   });
 
-  module.exports = {Sequelize, sequelize, User, Course};
+  module.exports = {Sequelize, sequelize, User, Course, Schedule};
 
 // 'use strict';
 

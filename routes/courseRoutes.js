@@ -8,6 +8,9 @@ const router = express.Router();
 router.get('/', isLoggedIn, controller.index);
 
 //post a new course to the database
-router.post('/', controller.create);
+router.post('/', controller.createCourse);
+
+//post a new schedule to the database
+router.post('/schedule', controller.createSchedule);
 
 module.exports = router;  
