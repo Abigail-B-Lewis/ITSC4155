@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'password', {
+const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
 
@@ -26,7 +26,7 @@ sequelize.sync({ alter: true })
     console.log("All models were synchronized successfully.");
   })
   .catch((err) => {
-    console.log("Error syncing models to the database: ", err);
+    console.log("Error syncing models to the database: ", err);   
   });
 
   module.exports = {Sequelize, sequelize, User, Course, Roster};

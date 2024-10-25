@@ -41,18 +41,19 @@ exports.getJoin = (req, res) => {
 //TODO: test once route is created
 exports.join = (req, res, next) => {
     let user = req.session.user;
+    console.log(req.body);
     //If user tries to enter both access codes
-    if (req.body.iaAccessCode != null && req.body.studentAccessCode != null){
+    if (req.body.iaAccessCode != '' && req.body.studentAccessCode != ''){
         req.flash("error", "You can only join as a student OR an IA. Please only enter 1 code")
         res.redirect('back');
     }
     //if user does not enter any access codes
-    if(req.body.iaAccessCode == null && req.body.studentAccessCode == null){
+    if(req.body.iaAccessCode == '' && req.body.studentAccessCode == ''){
         req.flash("error", "No codes entered, please try again")
         res.redirect('back');
     }
     //if user wants to join as an IA
-    if(req.body.iaAccessCode != null){
+    if(req.body.iaAccessCode != '' && req.body.studentAccessCode == ''){
         Course.findOne({where: {iaAccessCode: req.body.iaAccessCode}})
         .then(course => {
             if (course == null){
@@ -64,34 +65,42 @@ exports.join = (req, res, next) => {
                 Roster.create({userId: user, courseId: course.id, role: 'ia'})
                 .then(roster => {
                     req.flash('success', 'Joined course successfully')
-                    //TODO: check to see if we should direct to course page or form
-                    res.redirect('back');
+                    res.redirect('/courses');
                 })
                 .catch(err => {
-                    console.log(err);
+                    if(err.name == "SequelizeUniqueConstraintError"){
+                        req.flash('error', 'You are already in this course');
+                        res.redirect('back');
+                    }else{
+                        next(err);
+                    }
                 })
             }
         })
         .catch(err => next(err));
     }
     // if user wants to join as student
-    if(req.body.studentAccessCode != null){
+    if(req.body.studentAccessCode != '' && req.body.iaAccessCode==''){
         Course.findOne({where: {studentAccessCode: req.body.studentAccessCode}})
         .then(course => {
             if (course == null){
                 req.flash("error", "Invalid student code entered. Please check with the instructor and try again");
                 res.redirect('back')
             }else{
-                //Since courseid and userid are primary keys in roster, it should not allow them to join a course that they
-                //are already in. Make sure to test this
                 Roster.create({userId: user, courseId: course.id, role: 'student'})
                 .then(roster => {
                     req.flash('success', 'Joined course successfully')
                     //TODO: check to see if we should direct to course page or form
-                    res.redirect('back');
+                    res.redirect('/courses');
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err.name);
+                    if(err.name == "SequelizeUniqueConstraintError"){
+                        req.flash('error', 'You are already in this course');
+                        res.redirect('back');
+                    }else{
+                        next(err);
+                    }
                 })
             }
         })
