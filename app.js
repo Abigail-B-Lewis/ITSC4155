@@ -7,6 +7,7 @@ const db = require('./models');
 const User = require('./models/user')
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const flash = require('connect-flash');
 
 //create app
 const app = express();
@@ -22,8 +23,12 @@ app.use(session({
     cookie: {maxAge: 30*60*10}
 }));
 
+app.use(flash());
+
 app.use((req, res, next) => {
     res.locals.user = req.session.user||null;
+    res.locals.errorMessages = req.flash('error');
+    res.locals.successMessages = req.flash('success');
     next();
 });
 
@@ -45,3 +50,20 @@ app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
+//error handling
+app.use((req, res, next) => {
+    let err = new Error('The server cannot locate ' + req.url);
+    err.status = 404;
+    next(err);
+});
+
+//should always be last in my routes
+app.use((err, req, res, next) => {
+    console.log(err.stack);
+    if(!err.status) {
+        err.status = 500;
+        err.message = ("Internal Server Error");
+    }
+    res.status(err.status);
+    res.render('error', {error: err});
+});

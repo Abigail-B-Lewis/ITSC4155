@@ -4,7 +4,7 @@ exports.new = (req, res) => {
     res.render('./signup')
 }
   
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
     let user = req.body;
     console.log(user);
     User.create({fullName: user.fullName, email: user.email, password: user.password, role: user.role})
@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         console.log('user created successfully!', user.email);
     }).catch(err => {
         //TODO: proper error handling
-        console.log(err);
+        next(err);
     });
 };
 
@@ -24,7 +24,7 @@ exports.getLogin = (req, res) => {
     //render view if necessary, depends on where front-end puts this form
 }
 
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     let email = req.body.email;
     let password = req.body.password;
     User.findOne({where: {email: email}})
@@ -33,28 +33,28 @@ exports.login = (req, res) => {
             user.validPassword(password)
             .then(result => {
                 if(result){
-                    console.log('login success')
                     req.session.user = user.id;
-                    req.session.user.role = user.role;
+                    req.session.role = user.role;
                     res.redirect('/courses');
                 }else{
-                    console.log('login failure - incorrect password')
+                    req.flash('error', 'Incorrect password entered. Please try again');
+                    res.redirect('back');
                 }
             })
             .catch(err => console.log(err))
         }else{
-            console.log('email does not exist');
+            req.flash('error', 'email is not associated with an existing account');
+            res.redirect('back');
         }
-    }).catch(err => console.log(err));
+    }).catch(err => next(err));
 }
 
 exports.logout = (req, res) => {
     req.session.destroy(err =>{  
         if(err){
-            console.log('Logout unsuccessful');
+            req.flash('error', 'Unable to log out');
         }else{  
-            console.log('Logout successful')
-            res.redirect('/users/login');
-        }
+            res.redirect('/users/login');  
+        }  
     });
 };
