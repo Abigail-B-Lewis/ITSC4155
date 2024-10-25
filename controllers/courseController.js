@@ -2,9 +2,19 @@ const {Course} = require('../models/index.js');
 const {Roster} = require('../models/index.js')
 
 exports.index = (req, res) => {
-    res.render('./officeHours/dashboard');
-    //needs more implementation to render courses the user is part of
+    Course.findAll()
+        .then(courses => {
+            res.render('./officeHours/dashboard', {courses});
+        })
+        .catch(error => {
+            console.error("Error fetching courses:", error);
+            next(error);
+        });
 }
+
+exports.getCreate = (req, res) => {
+    res.render('./officeHours/create'); // Render the create.ejs view
+};
 
 exports.create = (req, res, next) => {
     let course = req.body;
@@ -15,12 +25,18 @@ exports.create = (req, res, next) => {
         //where to redirect once course is created?
         req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
-        res.redirect(back);
+        res.redirect('/courses');
     }).catch(err => {
         //TODO: proper error handling
         next(err);
     });
 }
+
+//get the join course view
+exports.getJoin = (req, res) => {
+    res.render('./officeHours/join'); // Render the create.ejs view
+};
+
 
 //TODO: test once route is created
 exports.join = (req, res, next) => {
@@ -37,7 +53,7 @@ exports.join = (req, res, next) => {
     }
     //if user wants to join as an IA
     if(req.body.iaAccessCode != null){
-        Courses.findOne({where: {iaAccessCode: req.body.iaAccessCode}})
+        Course.findOne({where: {iaAccessCode: req.body.iaAccessCode}})
         .then(course => {
             if (course == null){
                 req.flash("error", "Invalid IA code entered. Please check with the instructor and try again");
@@ -60,7 +76,7 @@ exports.join = (req, res, next) => {
     }
     // if user wants to join as student
     if(req.body.studentAccessCode != null){
-        Courses.findOne({where: {studentAccessCode: req.body.studentAccessCode}})
+        Course.findOne({where: {studentAccessCode: req.body.studentAccessCode}})
         .then(course => {
             if (course == null){
                 req.flash("error", "Invalid student code entered. Please check with the instructor and try again");

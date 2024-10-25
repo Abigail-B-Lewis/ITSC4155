@@ -10,7 +10,13 @@ router.get('/', isLoggedIn, controller.index);
 //post a new course to the database
 router.post('/', controller.create);
 
+//get create form 
+router.get('/create', isLoggedIn, controller.getCreate);
+
 //post a roster(join course) to the database
-router.post('/', controller.join);
+router.post('/join', controller.join);
+
+//get view for joining a course
+router.get('/join', isLoggedIn, controller.getJoin);
 
 module.exports = router;  

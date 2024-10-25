@@ -1,33 +1,23 @@
-<%- include('../partials/header.ejs')%>
+<%- include('../partials/header.ejs') %>
 <main>
-    <div class="courses">
-        <!-- THIS VIEW IS NOT DONE needs to match figma in task 55-->
-        <!-- <h2>My Courses</h2> -->
-        <h2>Create Courses</h2>
-        <form action="/courses" method="post">
-            <p>
-                <label for="course">Course Name</label>
-                <input title="Course Name" type="text" id="course" name="courseName">
-            </p>
-            <p>
-                <label for="semester">Course Semester</label>
-                <select name="courseSemester" id="semester">
-                    <option value="Fall 2024">Fall 2024</option>
-                    <option value="Spring 2025">Spring 2025</option>
-                    <option value="Fall 2025">Fall 2025</option>
-                    <option value="spring 2026">Spring 2026</option>
-                </select>
-            </p>
-            <p>
-                <label for="ia">IA Access Code</label>
-                <input title="IA" type="text" id="ia" name="iaAccessCode">
-            </p>
-            <p>
-                <label for="student">Student Access Code</label>
-                <input title="Student" type="text" id="student" name="studentAccessCode">
-            </p>
-            <input type="submit" value="Create">
-        </form>
-    </div>
+    <h2>My Courses</h2>
+
+    <% if (role === 'instructor') { %>
+        <a href="/courses/create" class="button">Create Course</a>
+    <% } else { %>
+        <a href="/courses/join" class="button">Join Course</a>
+    <% } %>
+
+    <% if (courses.length) { %>
+        <% courses.forEach(course => { %>
+            <div class="course">
+                <div class="courseName">
+                    <p><%= course.courseName %></p>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>There are no courses to display</p>
+    <% } %> 
 </main>
-<%- include('../partials/footer.ejs')%>
+<%- include('../partials/footer.ejs') %>
