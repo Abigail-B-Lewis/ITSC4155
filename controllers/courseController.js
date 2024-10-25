@@ -1,9 +1,19 @@
 const {Course} = require('../models/index.js');
 
 exports.index = (req, res) => {
-    res.render('./officeHours/dashboard');
-    //needs more implementation to render courses the user is part of
+    Course.findAll()
+        .then(courses => {
+            res.render('./officeHours/dashboard', {courses});
+        })
+        .catch(error => {
+            console.error("Error fetching courses:", error);
+            next(error);
+        });
 }
+
+exports.getCreate = (req, res) => {
+    res.render('./officeHours/create'); // Render the create.ejs view
+};
 
 exports.create = (req, res, next) => {
     let course = req.body;

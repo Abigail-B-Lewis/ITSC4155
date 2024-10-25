@@ -34,7 +34,7 @@ exports.login = (req, res, next) => {
             .then(result => {
                 if(result){
                     req.session.user = user.id;
-                    req.session.user.role = user.role;
+                    req.session.role = user.role;
                     res.redirect('/courses');
                 }else{
                     req.flash('error', 'Incorrect password entered. Please try again');
@@ -54,7 +54,6 @@ exports.logout = (req, res) => {
         if(err){
             req.flash('error', 'Unable to log out');
         }else{  
-            req.flash('success', 'logged out successfully');
             res.redirect('/users/login');
         }
     });

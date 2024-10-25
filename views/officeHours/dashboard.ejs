@@ -1,23 +1,23 @@
-<%- include('../partials/header.ejs')%>
+<%- include('../partials/header.ejs') %>
 <main>
-    <form action="/myCourses">
-        <h2>My Courses</h2>
-        <%if (user.role === 'instructor'){%>
-            <button href="/courses">Create Course</button>
-        <%}else{%>
-            <button href="#">Join Course</button>
-        <%}%>
-        <%if(courses.length) {%>
-            <%courses.forEach(course=>{%>
-                <div class="course">
-                    <div class="courseName">
-                        <p><%= course.courseName%></p>
-                    </div>
+    <h2>My Courses</h2>
+
+    <% if (role === 'instructor') { %>
+        <a href="/courses/create" class="button">Create Course</a>
+    <% } else { %>
+        <a href="#" class="button">Join Course</a>
+    <% } %>
+
+    <% if (courses.length) { %>
+        <% courses.forEach(course => { %>
+            <div class="course">
+                <div class="courseName">
+                    <p><%= course.courseName %></p>
                 </div>
-            <% });
-        } else{%>
-            <p>There are no courses to display</p>
-        <%}%> 
-    </form>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>There are no courses to display</p>
+    <% } %> 
 </main>
-    <%- include('../partials/footer.ejs')%>
+<%- include('../partials/footer.ejs') %>
