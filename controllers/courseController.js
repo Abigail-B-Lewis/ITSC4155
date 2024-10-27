@@ -22,29 +22,15 @@ exports.createCourse = (req, res, next) => {
 }
 
 exports.createSchedule = (req, res, next) => {
-    console.log(req.body);
-    const { courseId, IaId, day, startTime, endTime } = req.body;
-
-    // Validation for day
-    const allowedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    if (!allowedDays.includes(day)) {
-        req.flash("error", "Invalid day entered. Please select a valid day.");
-        return res.redirect('back');
-    }
-
-    // Validate start and end time format (HH:MM)
-    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-    if (!timeRegex.test(startTime) || !timeRegex.test(endTime)) {
-        req.flash("error", "Invalid time format. Please use HH:MM format for start and end times.");
-        return res.redirect('back');
-    }
+    const {IaId, day, startTime, endTime } = req.body;
+    const courseId = req.params.id;
 
     // Verify course exists
     Course.findByPk(courseId)
         .then(course => {
             if (!course) {
                 req.flash("error", "Invalid course ID. Please verify the course.");
-                return res.redirect('back');
+                return res.redirect('/courses');
             }
 
             // Verify IA exists
@@ -53,26 +39,29 @@ exports.createSchedule = (req, res, next) => {
         .then(ia => {
             if (!ia) {
                 req.flash("error", "Invalid IA ID. Please verify the IA.");
-                return res.redirect('back');
-            }
+                return res.redirect('/courses');
+            }  
 
             // Create the schedule entry
-            return Schedule.create({
-                courseId,
-                IaId,
-                day,
-                startTime,
-                endTime,
-            });
-        })
-        .then(() => {
-            console.log('Schedule created successfully');
-            req.flash("success", "Schedule created successfully");
-            res.redirect('/courses');  // Redirect to relevant page - to be changed?
+            Schedule.create({courseId, IaId, day, startTime, endTime})
+            .then(schedule =>{
+                console.log('Schedule created successfully');
+                req.flash("success", "Schedule created successfully");
+                res.redirect('/courses');  // Redirect to relevant page - to be changed?
+                return schedule;
+            })
+            .catch(error => {
+                console.log(error.name, error.message);
+                if(error.name == "SequelizeValidationError"){
+                    req.flash('error', error.message);
+                    res.redirect('/courses');
+                }else{
+                    next(error);
+                }
+            })
         })
         .catch(error => {
             console.error("Error creating schedule:", error);
-            req.flash("error", "An error occurred while creating the schedule. Please try again.");
             next(error);
         });
 };

@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'password!', {
+const sequelize = new Sequelize('officeq', 'root', 'password', {
   dialect: 'mysql'
 });
 

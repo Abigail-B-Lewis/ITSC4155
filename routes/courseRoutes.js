@@ -11,6 +11,6 @@ router.get('/', isLoggedIn, controller.index);
 router.post('/', controller.createCourse);
 
 //post a new schedule to the database
-router.post('/schedule', controller.createSchedule);
+router.post('/:id/schedule', controller.createSchedule);
 
 module.exports = router;  

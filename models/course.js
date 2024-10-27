@@ -37,8 +37,8 @@ module.exports = (sequelize, Sequelize) => {
     {
         timestamps: false,
         hooks: {       
-          beforeValidate: async (user) => {
-            user.id = uuid();
+          beforeValidate: async (course) => {
+            course.id = uuid();
           },
         },
     }
