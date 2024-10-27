@@ -1,4 +1,4 @@
-const {Course} = require('../models/index.js');
+const {Course, Schedule} = require('../models/index.js');
 
 exports.index = (req, res) => {
     res.render('./officeHours/dashboard');
@@ -23,7 +23,21 @@ exports.show = (req, res) => {
     Course.findOne({where: {id: courseId}})
     .then(course => {
         if(course){
-            res.render('./officeHours/course', {course});
+            //TEST SCHEDULE FUNCTIONALITY ONCE EVERYTHING IS MERGED
+            let formattedSchedule = {};
+            Schedule.findAll({where: {courseid: courseId}})
+            .then(schedules =>{
+                if(schedules){
+                    schedules.forEach(({day, startTime, endTime}) =>{
+                        if(!formattedSchedule[day]){
+                            formattedSchedule[day] = [];
+                        }
+                        formattedSchedule[day].push({startTime, endTime});
+                    });
+                }
+            })
+            .catch(err => next(err))
+            res.render('./officeHours/course', {formattedSchedule});
         }else{
             //TODO: deal with error handling and make 404
             req.flash('error', 'Course does not exist');

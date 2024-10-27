@@ -2,12 +2,31 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'PASSWORD', {
+const sequelize = new Sequelize('officeq', 'root', 'Password', {
   dialect: 'mysql'
 });
 
 const User = require('./user.js')(sequelize, Sequelize);
 const Course = require('./course.js')(sequelize, Sequelize);
+const Schedule = require('./schedule.js')(sequelize, Sequelize);
+
+Course.hasMany(Schedule, {
+  foreignKey: 'courseId',
+  onDelete: 'CASCADE'
+});
+
+Schedule.belongsTo(Course, {
+  foreignKey: 'courseId',
+});
+
+User.hasMany(Schedule, {
+  foreignKey: 'IaId',
+  onDelete: 'CASCADE'
+});
+
+Schedule.belongsTo(User, {
+  foreignKey: 'IaId'
+});  
 
 
 
@@ -25,7 +44,7 @@ sequelize.sync({ alter: true })
     console.log("Error syncing models to the database: ", err);
   });
 
-  module.exports = {Sequelize, sequelize, User, Course};
+  module.exports = {Sequelize, sequelize, User, Course, Schedule};
 
 // 'use strict';
 

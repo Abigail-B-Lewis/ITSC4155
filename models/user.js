@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define('user', {
     id: {
-      type: Sequelize.STRING,
+      type: Sequelize.UUID,
       allowNull: false,
       unique: true,
       primaryKey: true
