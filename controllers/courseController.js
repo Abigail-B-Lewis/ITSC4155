@@ -1,16 +1,37 @@
-const {Course} = require('../models/index.js');
-const {Roster} = require('../models/index.js')
+const { Course, Roster } = require('../models/index.js');
 
-exports.index = (req, res) => {
-    Course.findAll()
-        .then(courses => {
-            res.render('./officeHours/dashboard', {courses});
-        })
-        .catch(error => {
-            console.error("Error fetching courses:", error);
-            next(error);
-        });
-}
+exports.index = (req, res, next) => {
+    const userId = req.session.user;
+    const role = req.session.role;
+
+    if (role === 'instructor') {
+        // Fetch only the courses created by this instructor
+        Course.findAll({ where: { instructorId: userId } })
+            .then(courses => {
+                res.render('./officeHours/dashboard', { courses, role });
+            })
+            .catch(error => {
+                console.error("Error fetching courses for instructor:", error);
+                req.flash('error', 'An error occurred while fetching your courses.');
+                next(error);
+            });
+    } else {
+        // Students and IAs see only the courses they are enrolled in
+        Roster.findAll({ where: { userId } })
+            .then(rosterEntries => {
+                const courseIds = rosterEntries.map(entry => entry.courseId);
+                return Course.findAll({ where: { id: courseIds } });
+            })
+            .then(courses => {
+                res.render('./officeHours/dashboard', { courses, role });
+            })
+            .catch(error => {
+                console.error("Error fetching courses for student:", error);
+                req.flash('error', 'An error occurred while fetching your enrolled courses.');
+                next(error);
+            });
+    }
+};
 
 exports.getCreate = (req, res) => {
     res.render('./officeHours/create'); // Render the create.ejs view
