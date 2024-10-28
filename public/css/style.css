@@ -58,6 +58,8 @@ html, body {
 /* Ensure the content below doesn't overlap the fixed header */
 main {
   padding-top: 200px; /* You can adjust to the header's height */
+  display: flex; /* Leave this applied so the content on the error pages stay in the center */
+  justify-content: center; /* Leave this applied so the content on the error pages stay in the center */
 }
 
 /* Footer Styling */
