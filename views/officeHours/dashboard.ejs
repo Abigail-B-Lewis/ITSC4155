@@ -1,6 +1,8 @@
 <%- include('../partials/header.ejs') %>
 <main>
-    <h2>My Courses</h2>
+    <div class="dashboard">
+        <h2>My Courses</h2>
+    </div>
 
     <% if (role === 'instructor') { %>
         <a href="/courses/create" class="button">Create Course</a>
@@ -11,13 +13,16 @@
     <% if (courses.length) { %>
         <% courses.forEach(course => { %>
             <div class="course">
+                <div class="image">
+                    Dummy
+                </div>
                 <div class="courseName">
                     <p><%= course.courseName %></p>
                 </div>
             </div>
         <% }); %>
     <% } else { %>
-        <p>There are no courses to display</p>
+        <p class="noCourses">There are no courses to display</p>
     <% } %> 
 </main>
 <%- include('../partials/footer.ejs') %>

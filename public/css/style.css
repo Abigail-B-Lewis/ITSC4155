@@ -203,3 +203,46 @@ input[type="submit"]{
   align-items: center;
   font-weight: bold;
 }
+/*The create course and join course button*/
+.button {
+  display: inline-block;       
+  padding: 10px 20px;          
+  background-color: #A49665;   
+  color: black;                
+  text-align: center;          
+  text-decoration: none;       
+  border-radius: 40px;          
+  font-size: 16px;             
+  font-weight: bold;           
+  cursor: pointer;
+  position: relative;
+  left: 300px;            
+}
+/*If there are no courses*/
+.noCourses{
+  position: relative;
+  top: 25px;
+  left: -150px;
+}
+/*The header for the dashboard*/
+.dashboard{
+  position: relative;
+  left: 125px;
+}
+/*Course name*/
+.courseName{
+  position: relative;
+  top: 5px;
+}
+/*Dummy image*/
+.image{
+  background-color: #cccccc; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  color: #333; 
+  font-size: 14px;
+  position: relative;
+  top: 25px;
+  left: -170px;
+}
