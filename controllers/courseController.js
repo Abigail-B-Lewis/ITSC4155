@@ -1,15 +1,37 @@
-const {Course} = require('../models/index.js');
+const { Course, Roster } = require('../models/index.js');
 
-exports.index = (req, res) => {
-    Course.findAll()
-        .then(courses => {
-            res.render('./officeHours/dashboard', {courses});
-        })
-        .catch(error => {
-            console.error("Error fetching courses:", error);
-            next(error);
-        });
-}
+exports.index = (req, res, next) => {
+    const userId = req.session.user;
+    const role = req.session.role;
+
+    if (role === 'instructor') {
+        // Fetch only the courses created by this instructor
+        Course.findAll({ where: { instructorId: userId } })
+            .then(courses => {
+                res.render('./officeHours/dashboard', { courses, role });
+            })
+            .catch(error => {
+                console.error("Error fetching courses for instructor:", error);
+                req.flash('error', 'An error occurred while fetching your courses.');
+                next(error);
+            });
+    } else {
+        // Students and IAs see only the courses they are enrolled in
+        Roster.findAll({ where: { userId } })
+            .then(rosterEntries => {
+                const courseIds = rosterEntries.map(entry => entry.courseId);
+                return Course.findAll({ where: { id: courseIds } });
+            })
+            .then(courses => {
+                res.render('./officeHours/dashboard', { courses, role });
+            })
+            .catch(error => {
+                console.error("Error fetching courses for student:", error);
+                req.flash('error', 'An error occurred while fetching your enrolled courses.');
+                next(error);
+            });
+    }
+};
 
 exports.getCreate = (req, res) => {
     res.render('./officeHours/create'); // Render the create.ejs view
@@ -21,9 +43,85 @@ exports.create = (req, res, next) => {
     console.log(req.session.user);
     Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorId: req.session.user , studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
     .then(course => {
-        //where to redirect once course is created? - redirect to dashboard for now
+        //where to redirect once course is created?
         req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
         res.redirect('/courses');
     }).catch(err => next(err));
+}
+
+//get the join course view
+exports.getJoin = (req, res) => {
+    res.render('./officeHours/join'); // Render the create.ejs view
+};
+
+
+//TODO: test once route is created
+exports.join = (req, res, next) => {
+    let user = req.session.user;
+    console.log(req.body);
+    //If user tries to enter both access codes
+    if (req.body.iaAccessCode != '' && req.body.studentAccessCode != ''){
+        req.flash("error", "You can only join as a student OR an IA. Please only enter 1 code")
+        res.redirect('back');
+    }
+    //if user does not enter any access codes
+    if(req.body.iaAccessCode == '' && req.body.studentAccessCode == ''){
+        req.flash("error", "No codes entered, please try again")
+        res.redirect('back');
+    }
+    //if user wants to join as an IA
+    if(req.body.iaAccessCode != '' && req.body.studentAccessCode == ''){
+        Course.findOne({where: {iaAccessCode: req.body.iaAccessCode}})
+        .then(course => {
+            if (course == null){
+                req.flash("error", "Invalid IA code entered. Please check with the instructor and try again");
+                res.redirect('back')
+            }else{
+                //Since courseid and userid are primary keys in roster, it should not allow them to join a course that they
+                //are already in. Make sure to test this
+                Roster.create({userId: user, courseId: course.id, role: 'ia'})
+                .then(roster => {
+                    req.flash('success', 'Joined course successfully')
+                    res.redirect('/courses');
+                })
+                .catch(err => {
+                    if(err.name == "SequelizeUniqueConstraintError"){
+                        req.flash('error', 'You are already in this course');
+                        res.redirect('back');
+                    }else{
+                        next(err);
+                    }
+                })
+            }
+        })
+        .catch(err => next(err));
+    }
+    // if user wants to join as student
+    if(req.body.studentAccessCode != '' && req.body.iaAccessCode==''){
+        Course.findOne({where: {studentAccessCode: req.body.studentAccessCode}})
+        .then(course => {
+            if (course == null){
+                req.flash("error", "Invalid student code entered. Please check with the instructor and try again");
+                res.redirect('back')
+            }else{
+                Roster.create({userId: user, courseId: course.id, role: 'student'})
+                .then(roster => {
+                    req.flash('success', 'Joined course successfully')
+                    //TODO: check to see if we should direct to course page or form
+                    res.redirect('/courses');
+                })
+                .catch(err => {
+                    console.log(err.name);
+                    if(err.name == "SequelizeUniqueConstraintError"){
+                        req.flash('error', 'You are already in this course');
+                        res.redirect('back');
+                    }else{
+                        next(err);
+                    }
+                })
+            }
+        })
+        .catch(err => next(err));
+    }
 }
