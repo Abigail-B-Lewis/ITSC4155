@@ -24,6 +24,6 @@ exports.create = (req, res, next) => {
         //where to redirect once course is created? - redirect to dashboard for now
         req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
-        res.render('./officeHours/dashboard');
+        res.redirect('/courses');
     }).catch(err => next(err));
 }
