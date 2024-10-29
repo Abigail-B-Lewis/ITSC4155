@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const { uuid } = require('uuidv4');
 const {Course} = require('.');
- 
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define('user', {
     id: {
@@ -25,7 +26,6 @@ module.exports = (sequelize, Sequelize) => {
     password: {
       type: Sequelize.STRING,
       allowNull: false,
-      len: [8, 24],
     },
     role: {
       type: Sequelize.STRING,
@@ -37,10 +37,13 @@ module.exports = (sequelize, Sequelize) => {
   }, 
   {
     timestamps: false,
-    hooks: {       
+    hooks: {
       beforeValidate: async (user) => {
-        user.id = uuid();
+        user.id = uuidv4();
         if (user.password) {
+          if (!(user.password.length > 8 && user.password.length < 24)) {
+            throw new Error('Password length must be between 8 and 24 characters.');
+          }
           try {
             const hash = await bcrypt.hash(user.password, 10);
             user.password = hash;
@@ -49,7 +52,7 @@ module.exports = (sequelize, Sequelize) => {
           }
         }
       },
-    },
+    }    
   }); 
 
   User.prototype.validPassword = async function (inputPassword) {
