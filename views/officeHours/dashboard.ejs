@@ -1,23 +1,30 @@
 <%- include('../partials/header.ejs') %>
 <main>
-    <h2>My Courses</h2>
-
-    <% if (role === 'instructor') { %>
+  <div class="dashboard-header">
+        <h2>My Courses</h2>
+        
+        <% if (role === 'instructor') { %>
         <a href="/courses/create" class="button">Create Course</a>
-    <% } else { %>
-        <a href="/courses/join" class="button">Join Course</a>
-    <% } %>
+        <% } else { %>
+        <a href="#" class="button">Join Course</a>
+        <% } %>
+  </div>
 
-    <% if (courses.length) { %>
-        <% courses.forEach(course => { %>
-            <div class="course">
-                <div class="courseName">
-                    <p><%= course.courseName %></p>
-                </div>
-            </div>
-        <% }); %>
-    <% } else { %>
-        <p>There are no courses to display</p>
-    <% } %> 
+  <% if (courses.length) { %>
+    <div class="course-grid">
+      <% courses.forEach(course => { %>
+        <div class="course-container">
+          <div class="image">
+            COURSE
+          </div>
+          <div class="courseName">
+            <p><%= course.courseName %></p>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p class="noCourses">There are no courses to display</p>
+  <% } %>
 </main>
 <%- include('../partials/footer.ejs') %>

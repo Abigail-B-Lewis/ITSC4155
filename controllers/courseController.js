@@ -47,10 +47,7 @@ exports.create = (req, res, next) => {
         req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
         res.redirect('/courses');
-    }).catch(err => {
-        //TODO: proper error handling
-        next(err);
-    });
+    }).catch(err => next(err));
 }
 
 //get the join course view

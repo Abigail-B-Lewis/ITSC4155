@@ -54,8 +54,8 @@ exports.logout = (req, res) => {
         if(err){
             req.flash('error', 'Unable to log out');
         }else{  
-            res.redirect('/users/login');  
-        }  
+            res.redirect('/users/login');
+        }
     });
 };
 
