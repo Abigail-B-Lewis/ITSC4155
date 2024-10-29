@@ -1,6 +1,4 @@
 const bcrypt = require('bcrypt');
-const { uuid } = require('uuidv4');
-const {Course} = require('.');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize, Sequelize) => {

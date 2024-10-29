@@ -1,5 +1,3 @@
-const {uuid} = require('uuidv4');
-const {User} = require('.')
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize, Sequelize) => {
