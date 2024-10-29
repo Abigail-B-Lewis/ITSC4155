@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs') %>
+<main>
+    <div class="courses">
+        <h2>Create Course</h2>
+        <form action="/courses" method="post">
+            <p>
+                <label for="course">Course Name</label>
+                <input title="Course Name" type="text" id="course" name="courseName" required>
+            </p>
+            <p>
+                <label for="semester">Course Semester</label>
+                <select name="courseSemester" id="semester" required>
+                    <option value="">Select a Semester</option>
+                    <option value="Fall 2024">Fall 2024</option>
+                    <option value="Spring 2025">Spring 2025</option>
+                    <option value="Fall 2025">Fall 2025</option>
+                    <option value="Spring 2026">Spring 2026</option>
+                </select>
+            </p>
+            <p>
+                <label for="ia">IA Access Code</label>
+                <input title="IA" type="text" id="ia" name="iaAccessCode" required>
+            </p>
+            <p>
+                <label for="student">Student Access Code</label>
+                <input title="Student" type="text" id="student" name="studentAccessCode" required>
+            </p>
+            <input type="submit" value="Create">
+        </form>
+    </div>
+</main>
+<%- include('../partials/footer.ejs') %>
