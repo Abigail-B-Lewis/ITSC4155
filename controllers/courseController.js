@@ -129,6 +129,11 @@ exports.getJoin = (req, res) => {
     res.render('./officeHours/join'); // Render the create.ejs view
 };
 
+//get the course schedule view - Najwa
+/* exports.schedule = (req, res) => {
+    res.render('./officeHours/schedule');
+}*/
+
 
 //TODO: test once route is created
 exports.join = (req, res, next) => {

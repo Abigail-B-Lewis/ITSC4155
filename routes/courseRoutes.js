@@ -24,4 +24,7 @@ router.post('/join', controller.join);
 //get view for joining a course
 router.get('/join', isLoggedIn, controller.getJoin);
 
+//get course view for adding schedule by Najwa
+// router.get('/schedule', controller.schedule)
+
 module.exports = router;  

@@ -1,0 +1,30 @@
+<%- include('../partials/header.ejs') %>
+<main>
+    <div class="course-header">
+        <h2>Welcome to Office Hours</h2>
+        <a href="/courses/schedule" class="button">Add Schedule</a>
+    </div> 
+
+    <div id="schedule-form" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Schedule</h2>
+            <form action="/courses/schedule" method="POST">
+                <p>
+                    <label for="Day">Day:</label>
+                    <input type="text" id="day" name="day" required>
+                </p>
+                <p>
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" id="time" name="time" required>
+                </p>
+                <p>
+                    <label for="end-time">End Time:</label>
+                    <input type="time" id="time" name="time" required>
+                </p>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer.ejs') %>

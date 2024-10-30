@@ -6,7 +6,7 @@
         <% if (role === 'instructor') { %>
         <a href="/courses/create" class="button">Create Course</a>
         <% } else { %>
-        <a href="#" class="button">Join Course</a>
+        <a href="/courses/join" class="button">Join Course</a>
         <% } %>
   </div>
 
@@ -14,7 +14,7 @@
     <div class="course-grid">
       <% courses.forEach(course => { %>
         <div class="course-container">
-          <div class="image">
+          <div class="image" onclick="location.href='/courses/schedule'">
             COURSE
           </div>
           <div class="courseName">
