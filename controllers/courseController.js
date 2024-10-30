@@ -1,3 +1,4 @@
+const e = require('connect-flash');
 const {Course, Schedule, User, Roster} = require('../models/index.js');
 const { v4: uuidv4 } = require('uuid');
 
@@ -66,6 +67,30 @@ exports.show = (req, res) => {
                         if(!formattedSchedule[day]){
                             formattedSchedule[day] = [];
                         }
+                        if(parseInt(startTime.slice(0,2))%12 != parseInt(startTime.slice(0,2))){
+                            if(parseInt(startTime.slice(0,2)) == 12){
+                                startTime = startTime + ' PM'
+                            }else{
+                                startTime = String(parseInt(startTime.slice(0,2))%12) + startTime.slice(2) + ' PM'
+                            }
+                        }else{
+                            startTime = startTime + ' AM'
+                        }
+                        if(parseInt(endTime.slice(0,2))%12 != parseInt(endTime.slice(0,2))){
+                            if(parseInt(endTime.slice(0,2)) == 12){
+                                endTime = endTime + ' PM'
+                            }else{
+                                endTime = String(parseInt(endTime.slice(0,2))%12) + endTime.slice(2) + ' PM'
+                            }
+                        }else{
+                            endTime = endTime + ' AM'
+                        }
+                        if (parseInt(startTime.slice(0,2)) == 0){
+                            startTime = '12:00 AM'
+                        }
+                        if(parseInt(endTime.slice(0,2)) == 0){
+                            endTime = '12:00 AM'
+                        }
                         formattedSchedule[day].push({startTime, endTime});
                     });
                     console.log(formattedSchedule);
@@ -89,7 +114,7 @@ exports.createSchedule = (req, res, next) => {
     console.log(iaId);
     console.log(startTime, endTime)
     // Verify course exists
-    Course.findByPk(courseId)
+    Course.findByPk(courseId)  
         .then(course => {
             if (!course) {
                 req.flash("error", "Invalid course ID. Please verify the course.");
@@ -106,7 +131,7 @@ exports.createSchedule = (req, res, next) => {
                 .then(schedule =>{
                     console.log('Schedule created successfully');
                     req.flash("success", "Schedule created successfully");
-                    res.redirect('/courses');  // Redirect to relevant page - to be changed?
+                    res.redirect('/courses/' + courseId);  // Redirect to relevant page - to be changed?
                     return schedule;
                 })
                 .catch(error => {
