@@ -1,6 +1,4 @@
 const {Course, Schedule, User, Roster} = require('../models/index.js');
-const {Schedule} = require('../models/index.js');
-const {User} = require('../models/index.js');
 const { v4: uuidv4 } = require('uuid');
 
 exports.index = (req, res, next) => {
@@ -51,6 +49,34 @@ exports.createCourse = (req, res, next) => {
         console.log('Course created successfully!', course.courseName);
         res.redirect('/courses');
     }).catch(err => next(err));
+}
+
+exports.show = (req, res) => {
+    let courseId = req.params.id;
+    Course.findOne({where: {id: courseId}})
+    .then(course => {
+        if(course){
+            //TEST SCHEDULE FUNCTIONALITY ONCE EVERYTHING IS MERGED
+            let formattedSchedule = {};
+            Schedule.findAll({where: {courseid: courseId}})
+            .then(schedules =>{
+                if(schedules){
+                    schedules.forEach(({day, startTime, endTime}) =>{
+                        if(!formattedSchedule[day]){
+                            formattedSchedule[day] = [];
+                        }
+                        formattedSchedule[day].push({startTime, endTime});
+                    });
+                }
+            })
+            .catch(err => next(err))
+            res.render('./officeHours/course', {formattedSchedule});
+        }else{
+            //TODO: deal with error handling and make 404
+            req.flash('error', 'Course does not exist');
+        }
+    })  
+    .catch(err => console.log(err));
 }
 
 exports.createSchedule = (req, res, next) => {

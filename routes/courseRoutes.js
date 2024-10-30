@@ -1,6 +1,6 @@
 const express = require('express');
 const controller = require('../controllers/courseController');
-const {isLoggedIn} = require('../middleware/validators');
+const {isLoggedIn, validateId} = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.get('/', isLoggedIn, controller.index);
 
 //post a new course to the database
 router.post('/', controller.createCourse);
+
+router.get('/:id', validateId, controller.show);
 
 //post a new schedule to the database
 router.post('/:id/schedule', controller.createSchedule);

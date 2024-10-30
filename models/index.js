@@ -11,9 +11,6 @@ const Course = require('./course.js')(sequelize, Sequelize);
 const Schedule = require('./schedule.js')(sequelize, Sequelize);
 const Roster = require('./roster.js')(sequelize, Sequelize);
 
-User.belongsToMany(Course, { through: Roster, foreignKey: 'userId' });
-Course.belongsToMany(User, { through: Roster, foreignKey: 'courseId' });
-
 Course.hasMany(Schedule, {
   foreignKey: 'courseId',
   onDelete: 'CASCADE'
@@ -32,6 +29,9 @@ Schedule.belongsTo(User, {
   foreignKey: 'IaId'
 });  
 
+
+User.belongsToMany(Course, { through: Roster, foreignKey: 'userId' });
+Course.belongsToMany(User, { through: Roster, foreignKey: 'courseId' });
 
 sequelize.authenticate().then(()=>{
   console.log("Connection successful");
