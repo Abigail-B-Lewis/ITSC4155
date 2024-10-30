@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'password', {
+const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
 
@@ -39,7 +39,7 @@ sequelize.authenticate().then(()=>{
   console.log("Error connecting to the database");
 });
 
-sequelize.sync({ alter: true }) 
+sequelize.sync({ alter: false }) 
   .then(() => {
     console.log("All models were synchronized successfully.");
   })

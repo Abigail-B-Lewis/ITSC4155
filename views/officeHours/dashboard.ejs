@@ -14,7 +14,7 @@
     <div class="course-grid">
       <% courses.forEach(course => { %>
         <div class="course-container">
-          <div class="image" onclick="location.href='/courses/schedule'">
+          <div class="image" onclick="location.href='/courses/<%=course.id%>'">
             COURSE
           </div>
           <div class="courseName">

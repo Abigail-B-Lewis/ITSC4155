@@ -12,6 +12,7 @@ exports.validateLogIn = [body('email', 'email must be a valid email address').is
 
 exports.validateId = (req, res, next) => {
     id = req.params.id;
+    console.log('validating course id')
     if(id.match(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/)) {
         return next();
     }else{
@@ -31,6 +32,7 @@ exports.isGuest = (req, res, next) => {
 };
     
 exports.isLoggedIn = (req, res, next) => { 
+    console.log('Checking if user is logged in')
     if(req.session.user){
         return next();
     }else{

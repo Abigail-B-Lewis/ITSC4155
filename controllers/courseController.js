@@ -35,6 +35,7 @@ exports.index = (req, res, next) => {
 };
 
 exports.getCreate = (req, res) => {
+    console.log('reached getCreate');
     res.render('./officeHours/create'); // Render the create.ejs view
 };
 
@@ -55,7 +56,7 @@ exports.show = (req, res) => {
     let courseId = req.params.id;
     Course.findOne({where: {id: courseId}})
     .then(course => {
-        if(course){
+        if(course){  
             //TEST SCHEDULE FUNCTIONALITY ONCE EVERYTHING IS MERGED
             let formattedSchedule = {};
             Schedule.findAll({where: {courseid: courseId}})
@@ -69,8 +70,9 @@ exports.show = (req, res) => {
                     });
                 }
             })
+            //TODO: add role for course, send to front end
             .catch(err => next(err))
-            res.render('./officeHours/course', {formattedSchedule});
+            res.render('./officeHours/schedule', {formattedSchedule, course});
         }else{
             //TODO: deal with error handling and make 404
             req.flash('error', 'Course does not exist');
@@ -79,46 +81,44 @@ exports.show = (req, res) => {
     .catch(err => console.log(err));
 }
 
-exports.createSchedule = (req, res, next) => {
-    const {IaId, day, startTime, endTime } = req.body;
+exports.createSchedule = (req, res, next) => {    
+    const {day, startTime, endTime } = req.body;
+    const iaId = req.session.user;
     const courseId = req.params.id;
-
+    console.log(iaId);
+    console.log(startTime, endTime)
     // Verify course exists
     Course.findByPk(courseId)
         .then(course => {
             if (!course) {
                 req.flash("error", "Invalid course ID. Please verify the course.");
-                return res.redirect('/courses');
+                return res.redirect('back');
             }
-
             // Verify IA exists
-            return User.findByPk(IaId);
-        })
-        .then(ia => {
-            if (!ia) {
-                req.flash("error", "Invalid IA ID. Please verify the IA.");
-                return res.redirect('/courses');
-            }  
-
-            // Create the schedule entry
-            Schedule.create({courseId, IaId, day, startTime, endTime})
-            .then(schedule =>{
-                console.log('Schedule created successfully');
-                req.flash("success", "Schedule created successfully");
-                res.redirect('/courses');  // Redirect to relevant page - to be changed?
-                return schedule;
-            })
-            .catch(error => {
-                console.log(error.name, error.message);
-                if(error.name == "SequelizeValidationError"){
-                    req.flash('error', error.message);
-                    res.redirect('/courses');
-                }else{
-                    next(error);
-                }
-            })
-        })
-        .catch(error => {
+            User.findOne({where: {id: iaId}})
+            .then(ia => {
+                if (!ia) {
+                    req.flash("error", "Invalid IA ID. Please verify the IA.");
+                    return res.redirect('back');
+                } 
+            Schedule.create({courseId: courseId, IaId: iaId, day: day, startTime: startTime, endTime: endTime})
+                .then(schedule =>{
+                    console.log('Schedule created successfully');
+                    req.flash("success", "Schedule created successfully");
+                    res.redirect('/courses');  // Redirect to relevant page - to be changed?
+                    return schedule;
+                })
+                .catch(error => {
+                    console.log(error.name, error.message);
+                    if(error.name == "SequelizeValidationError"){
+                        req.flash('error', error.message);
+                        res.redirect('/courses');
+                    }else{
+                        next(error);
+                    }
+                })
+            }).catch(err => next(err))
+        }).catch(error => {
             console.error("Error creating schedule:", error);
             next(error);
         });

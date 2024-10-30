@@ -11,8 +11,8 @@ exports.create = (req, res, next) => {
     .then(user => {
         //TODO: figure out how front-end is displaying login/register forms
         //and redirect to login once account is created.
+        req.flash('success', 'Account created successfully!');
         res.redirect('/users/login')
-        console.log('user created successfully!', user.email);
     }).catch(err => {
         //TODO: proper error handling
         next(err);

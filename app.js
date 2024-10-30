@@ -20,7 +20,7 @@ app.use(session({
     secret: '1342534634534534',
     resave: false,
     saveUninitialized: true,
-    cookie: {maxAge: 30*60*10}
+    cookie: {maxAge: 60 * 60 * 1000}
 }));
 
 app.use(flash());
