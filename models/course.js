@@ -1,4 +1,4 @@
-const {uuid} = require('uuidv4');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize, Sequelize) => {
     const Course = sequelize.define('course', {
@@ -14,10 +14,12 @@ module.exports = (sequelize, Sequelize) => {
       },
       //should probably add enum for this attribute?
       courseSemester: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING,  
         allowNull: false,
-        isIn: [['Fall 2024', 'Spring 2025', 'Fall 2025', 'Spring 2026']],
-      },
+        validate: {
+            is: /^[A-Za-z]+ \d{4}$/ // Validates format like "Fall 2024"
+        }
+    },
       instructorId: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -38,7 +40,7 @@ module.exports = (sequelize, Sequelize) => {
         timestamps: false,
         hooks: {       
           beforeValidate: async (course) => {
-            course.id = uuid();
+            course.id = uuidv4();
           },
         },
     }

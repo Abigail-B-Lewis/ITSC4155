@@ -1,0 +1,14 @@
+<%- include('../partials/header.ejs')%>
+<main>
+    <h2>Join a Course</h2>
+    <form action="/courses/join" method="POST">
+        <label for="studentAccessCode">Student Access Code:</label>
+        <input type="text" id="studentAccessCode" name="studentAccessCode" >
+        
+        <label for="iaAccessCode">IA Access Code:</label>
+        <input type="text" id="iaAccessCode" name="iaAccessCode">
+        
+        <button type="submit">Join Course</button>
+    </form>
+</main>
+<%- include('../partials/footer.ejs')%>

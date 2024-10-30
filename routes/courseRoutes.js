@@ -13,4 +13,13 @@ router.post('/', controller.createCourse);
 //post a new schedule to the database
 router.post('/:id/schedule', controller.createSchedule);
 
+//get create form 
+router.get('/create', isLoggedIn, controller.getCreate);
+
+//post a roster(join course) to the database
+router.post('/join', controller.join);
+
+//get view for joining a course
+router.get('/join', isLoggedIn, controller.getJoin);
+
 module.exports = router;  

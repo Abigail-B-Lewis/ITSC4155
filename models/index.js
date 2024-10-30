@@ -9,6 +9,10 @@ const sequelize = new Sequelize('officeq', 'root', 'password', {
 const User = require('./user.js')(sequelize, Sequelize);
 const Course = require('./course.js')(sequelize, Sequelize);
 const Schedule = require('./schedule.js')(sequelize, Sequelize);
+const Roster = require('./roster.js')(sequelize, Sequelize);
+
+User.belongsToMany(Course, { through: Roster, foreignKey: 'userId' });
+Course.belongsToMany(User, { through: Roster, foreignKey: 'courseId' });
 
 Course.hasMany(Schedule, {
   foreignKey: 'courseId',
@@ -40,10 +44,10 @@ sequelize.sync({ alter: true })
     console.log("All models were synchronized successfully.");
   })
   .catch((err) => {
-    console.log("Error syncing models to the database: ", err);
+    console.log("Error syncing models to the database: ", err);   
   });
 
-  module.exports = {Sequelize, sequelize, User, Course, Schedule};
+  module.exports = {Sequelize, sequelize, User, Course, Schedule, Roster};
 
 // 'use strict';
 
