@@ -20,7 +20,7 @@ exports.create = (req, res, next) => {
 };
 
 exports.getLogin = (req, res) => {
-    res.render('./login')  
+    res.render('./login');
     //render view if necessary, depends on where front-end puts this form
 }
 
@@ -54,7 +54,26 @@ exports.logout = (req, res) => {
         if(err){
             req.flash('error', 'Unable to log out');
         }else{  
-            res.redirect('/users/login');  
-        }  
+            res.redirect('/users/login');
+        }
     });
 };
+
+exports.profile = (req, res, next) => {
+    const userId = req.session.user;
+
+    User.findByPk(userId)
+    .then(user => {
+        if (!user) {
+            //return res.status(404).render('error', { message: 'User not found' });
+            req.flash('error', 'User not found');
+            return res.redirect('/courses');
+        }
+        res.render('./officeHours/profile', { user });
+    })
+    .catch(err => next(err));
+};
+
+exports.about = (req, res) => {
+    res.render('./about');  
+}

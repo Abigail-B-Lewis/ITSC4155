@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       //should probably add enum for this attribute?
       courseSemester: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING,  
         allowNull: false,
         validate: {
             is: /^[A-Za-z]+ \d{4}$/ // Validates format like "Fall 2024"
@@ -39,8 +39,8 @@ module.exports = (sequelize, Sequelize) => {
     {
         timestamps: false,
         hooks: {       
-          beforeValidate: async (user) => {
-            user.id = uuidv4();
+          beforeValidate: async (course) => {
+            course.id = uuidv4();
           },
         },
     }

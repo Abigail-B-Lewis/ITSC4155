@@ -1,3 +1,5 @@
+const { uuid } = require('uuidv4');
+
 module.exports = (sequelize, Sequelize) => {
     const Schedule = sequelize.define('schedule', {
         id: {
@@ -15,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         //Is storing IaId necessary? Do users need to know which IA is available?
         //Current system does list available IAs with schedule.
-        IaId: {  
+        IaId: {
             type: Sequelize.UUID,
             allowNull: false,
             references: {
@@ -26,24 +28,39 @@ module.exports = (sequelize, Sequelize) => {
         day: {
             type: Sequelize.STRING,
             allowNull: false,
-            isIn: [['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']],
+            validate: {
+                isIn: {
+                    args: [['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']],
+                    msg: 'Invalid day entered'
+                }
+            }
         },
         startTime: {
             type: Sequelize.STRING,
             allowNull: false,
-            is: /^([01]\d|2[0-3]):([0-5]\d)$/,
+            validate: {
+                is: {
+                    args: /^([01]\d|2[0-3]):([0-5]\d)$/,
+                    msg: 'Invalid start time entered'
+                }
+            }
         },
         endTime:{
             type: Sequelize.STRING,
             allowNull: false,
-            is: /^([01]\d|2[0-3]):([0-5]\d)$/,
+            validate: {
+                is: {
+                    args: /^([01]\d|2[0-3]):([0-5]\d)$/,
+                    msg: 'Invalid end time entered'
+                }
+            }
         },
     },
     {
         timestamps: false,
         hooks: {
-            beforeValidate: async (user) => {
-                user.id = uuid();
+            beforeValidate: async (schedule) => {
+                schedule.id = uuid();
             }   
         }
     }
