@@ -68,11 +68,12 @@ exports.show = (req, res) => {
                         }
                         formattedSchedule[day].push({startTime, endTime});
                     });
+                    console.log(formattedSchedule);
+                    res.render('./officeHours/schedule', {formattedSchedule, course});
                 }
             })
             //TODO: add role for course, send to front end
             .catch(err => next(err))
-            res.render('./officeHours/schedule', {formattedSchedule, course});
         }else{
             //TODO: deal with error handling and make 404
             req.flash('error', 'Course does not exist');

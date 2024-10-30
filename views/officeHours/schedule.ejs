@@ -1,26 +1,50 @@
 <%- include('../partials/header.ejs') %>
 <main>
     <div class="course-header">
-        <h2>Welcome to <%=course.courseName%></h2>
-        <a class="button">Add Schedule</a>
+        <h2>Welcome to <%= course.courseName %></h2>
+        <a class="button" id="add-schedule-button">Add Schedule</a>
     </div> 
+
+    <div class="calendar-container">
+        <div class="calendar-title">Weekly Office Hours</div>
+        <div class="calendar">
+            <% const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]; %>
+            <% daysOfWeek.forEach(day => { %>
+                <div class="day-row">
+                    <div class="day-label"><%= day %>:</div>
+                    <div class="time-blocks">
+                        <% if (formattedSchedule[day]) { %>
+                            <% formattedSchedule[day].forEach(block => { %>
+                                <div class="time-block">
+                                    <%= block.startTime %> - <%= block.endTime %>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="time-block empty">No Office Hours</div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    
 
     <div id="schedule-form" class="modal-overlay">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Add Schedule</h2>
-            <form action="/courses/<%=course.id%>/schedule" method="POST">
+            <form action="/courses/<%= course.id %>/schedule" method="POST">
                 <p>
-                    <label for="Day">Day:</label>
+                    <label for="day">Day:</label>
                     <input type="text" id="day" name="day" required>
                 </p>
                 <p>
                     <label for="start-time">Start Time:</label>
-                    <input type="time" id="time" name="startTime" required>
+                    <input type="time" id="start-time" name="startTime" required>
                 </p>
                 <p>
                     <label for="end-time">End Time:</label>
-                    <input type="time" id="time" name="endTime" required>
+                    <input type="time" id="end-time" name="endTime" required>
                 </p>
                 <button type="submit">Submit</button>
             </form>
@@ -28,3 +52,28 @@
     </div>
 </main>
 <%- include('../partials/footer.ejs') %>
+
+<script>
+    // Select elements
+    const addScheduleButton = document.getElementById("add-schedule-button");
+    const scheduleFormModal = document.getElementById("schedule-form");
+    const closeButton = document.querySelector(".close");
+  
+    // Show modal on "Add Schedule" button click
+    addScheduleButton.addEventListener("click", () => {
+      scheduleFormModal.style.display = "flex";
+    });
+  
+    // Hide modal on close button click
+    closeButton.addEventListener("click", () => {
+      scheduleFormModal.style.display = "none";
+    });
+  
+    // Hide modal when clicking outside the content area
+    window.addEventListener("click", (event) => {
+      if (event.target === scheduleFormModal) {
+        scheduleFormModal.style.display = "none";
+      }
+    });
+  </script>
+  

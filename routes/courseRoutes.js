@@ -19,6 +19,7 @@ router.post('/join', controller.join);
 //get view for joining a course
 router.get('/join', isLoggedIn, controller.getJoin);
 
+//gets an individual course
 router.get('/:id', validateId, controller.show);
 
 //post a new schedule to the database
