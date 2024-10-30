@@ -1,4 +1,7 @@
-const { Course, Roster } = require('../models/index.js');
+const {Course, Schedule, User, Roster} = require('../models/index.js');
+const {Schedule} = require('../models/index.js');
+const {User} = require('../models/index.js');
+const { v4: uuidv4 } = require('uuid');
 
 exports.index = (req, res, next) => {
     const userId = req.session.user;
@@ -37,7 +40,7 @@ exports.getCreate = (req, res) => {
     res.render('./officeHours/create'); // Render the create.ejs view
 };
 
-exports.create = (req, res, next) => {
+exports.createCourse = (req, res, next) => {
     let course = req.body;
     console.log(course);
     console.log(req.session.user);
@@ -49,6 +52,51 @@ exports.create = (req, res, next) => {
         res.redirect('/courses');
     }).catch(err => next(err));
 }
+
+exports.createSchedule = (req, res, next) => {
+    const {IaId, day, startTime, endTime } = req.body;
+    const courseId = req.params.id;
+
+    // Verify course exists
+    Course.findByPk(courseId)
+        .then(course => {
+            if (!course) {
+                req.flash("error", "Invalid course ID. Please verify the course.");
+                return res.redirect('/courses');
+            }
+
+            // Verify IA exists
+            return User.findByPk(IaId);
+        })
+        .then(ia => {
+            if (!ia) {
+                req.flash("error", "Invalid IA ID. Please verify the IA.");
+                return res.redirect('/courses');
+            }  
+
+            // Create the schedule entry
+            Schedule.create({courseId, IaId, day, startTime, endTime})
+            .then(schedule =>{
+                console.log('Schedule created successfully');
+                req.flash("success", "Schedule created successfully");
+                res.redirect('/courses');  // Redirect to relevant page - to be changed?
+                return schedule;
+            })
+            .catch(error => {
+                console.log(error.name, error.message);
+                if(error.name == "SequelizeValidationError"){
+                    req.flash('error', error.message);
+                    res.redirect('/courses');
+                }else{
+                    next(error);
+                }
+            })
+        })
+        .catch(error => {
+            console.error("Error creating schedule:", error);
+            next(error);
+        });
+};
 
 //get the join course view
 exports.getJoin = (req, res) => {
