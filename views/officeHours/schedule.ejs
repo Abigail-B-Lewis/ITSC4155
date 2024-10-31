@@ -2,7 +2,7 @@
 <main>
     <div class="course-header">
         <h2>Welcome to <%= course.courseName %></h2>
-        <% if(role == 'ia'){%>
+        <% if(role == 'ia' || role == 'instructor'){%>
             <a class="button" id="add-schedule-button">Add Schedule</a>
         <%}%>
     </div> 
@@ -41,7 +41,7 @@
                     <input type="text" id="day" name="day" required> -->
                     <label for="dayOfWeek">Day:</label>
                     <select name="day" id="dayOfWeek" required>
-                        <option value="">Select a Semester</option>
+                        <option value="">Select a day</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
                         <option value="Wednesday">Wednesday</option>

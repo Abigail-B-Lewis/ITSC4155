@@ -40,27 +40,31 @@ exports.getCreate = (req, res) => {
     res.render('./officeHours/create'); // Render the create.ejs view
 };
 
-exports.createCourse = (req, res, next) => {
-    let course = req.body;
-    console.log(course);
+exports.createCourse = (req, res, next) => {  
+    let course = req.body;  
+    console.log(course);  
     console.log(req.session.user);
     Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorId: req.session.user , studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
     .then(course => {
         //where to redirect once course is created?
+        Roster.create({courseId: course.id, userId: course.instructorId, role: 'instructor'})
+        .then(roster => console.log("The roster is" + roster))
+        .catch(err => next(err))
         req.flash('success', 'course created successfully!');
         console.log('Course created successfully!', course.courseName);
         res.redirect('/courses');
+
     }).catch(err => next(err));
 }
 
-exports.show = (req, res) => {
+exports.show = (req, res, next) => {
     let courseId = req.params.id;
     let userId = req.session.user;
     let role;
     Roster.findOne({where: {userId: userId}})
     .then(user =>{
         role = user.role;
-    }).catch(err => next(err))
+    }).catch(err => console.log(err))
     Course.findOne({where: {id: courseId}})
     .then(course => {
         if(course){  
@@ -132,7 +136,8 @@ exports.createSchedule = (req, res, next) => {
                 if (!ia) {
                     req.flash("error", "Invalid IA ID. Please verify the IA.");
                     return res.redirect('back');
-                } 
+                }
+                
             Schedule.create({courseId: courseId, IaId: iaId, day: day, startTime: startTime, endTime: endTime})
                 .then(schedule =>{
                     console.log('Schedule created successfully');
