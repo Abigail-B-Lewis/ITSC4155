@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'password!', {
+const sequelize = new Sequelize('officeq', 'root', 'Alew88383869!', {
   dialect: 'mysql'
 });
 
@@ -10,7 +10,7 @@ const User = require('./user.js')(sequelize, Sequelize);
 const Course = require('./course.js')(sequelize, Sequelize);
 const Schedule = require('./schedule.js')(sequelize, Sequelize);
 const Roster = require('./roster.js')(sequelize, Sequelize);
-
+  
 Course.hasMany(Schedule, {
   foreignKey: 'courseId',
   onDelete: 'CASCADE'

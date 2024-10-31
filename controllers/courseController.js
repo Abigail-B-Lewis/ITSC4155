@@ -55,6 +55,12 @@ exports.createCourse = (req, res, next) => {
 
 exports.show = (req, res) => {
     let courseId = req.params.id;
+    let userId = req.session.user;
+    let role;
+    Roster.findOne({where: {userId: userId}})
+    .then(user =>{
+        role = user.role;
+    }).catch(err => next(err))
     Course.findOne({where: {id: courseId}})
     .then(course => {
         if(course){  
@@ -94,7 +100,7 @@ exports.show = (req, res) => {
                         formattedSchedule[day].push({startTime, endTime});
                     });
                     console.log(formattedSchedule);
-                    res.render('./officeHours/schedule', {formattedSchedule, course});
+                    res.render('./officeHours/schedule', {formattedSchedule, course, role});
                 }
             })
             //TODO: add role for course, send to front end

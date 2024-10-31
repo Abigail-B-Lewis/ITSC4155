@@ -2,7 +2,9 @@
 <main>
     <div class="course-header">
         <h2>Welcome to <%= course.courseName %></h2>
-        <a class="button" id="add-schedule-button">Add Schedule</a>
+        <% if(role == 'ia'){%>
+            <a class="button" id="add-schedule-button">Add Schedule</a>
+        <%}%>
     </div> 
 
     <div class="calendar-container">
