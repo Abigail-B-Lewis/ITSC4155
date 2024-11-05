@@ -10,6 +10,7 @@ const User = require('./user.js')(sequelize, Sequelize);
 const Course = require('./course.js')(sequelize, Sequelize);
 const Schedule = require('./schedule.js')(sequelize, Sequelize);
 const Roster = require('./roster.js')(sequelize, Sequelize);
+const Question = require('./question.js')(sequelize, Sequelize);
   
 Course.hasMany(Schedule, {
   foreignKey: 'courseId',
@@ -32,6 +33,8 @@ Schedule.belongsTo(User, {
 
 User.belongsToMany(Course, { through: Roster, foreignKey: 'userId' });
 Course.belongsToMany(User, { through: Roster, foreignKey: 'courseId' });
+Question.belongsTo(Course, { foreignKey: 'courseId' });
+Question.belongsTo(User, { foreignKey: 'userId'});
 
 sequelize.authenticate().then(()=>{
   console.log("Connection successful");
@@ -39,7 +42,7 @@ sequelize.authenticate().then(()=>{
   console.log("Error connecting to the database");
 });
 
-sequelize.sync({ alter: false }) 
+sequelize.sync({ alter: true }) 
   .then(() => {
     console.log("All models were synchronized successfully.");
   })
