@@ -58,6 +58,11 @@ module.exports = (sequelize, Sequelize) => {
         }
     }, {
         timestamps: false,
+        hooks: {
+            beforeValidate: async (question) => {
+                question.id = uuidv4();
+              },
+        }
     });
 
     return Question;
