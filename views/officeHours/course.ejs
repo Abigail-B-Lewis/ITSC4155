@@ -1,3 +1,11 @@
 <%- include('../partials/header.ejs')%>
-<h2>Welcome to <%=course.courseName%></h2>
+<main>
+    <div class="course-header">
+        <h2>Welcome to <%= course.courseName %></h2>
+            <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
+    </div> 
+    <div class="queue-container"> 
+        <p>Here is where you will find information about the queue</p>
+    </div>
+</main>
 <%- include('../partials/footer.ejs')%>

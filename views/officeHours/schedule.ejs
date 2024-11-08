@@ -1,7 +1,7 @@
 <%- include('../partials/header.ejs') %>
 <main>
     <div class="course-header">
-        <h2>Welcome to <%= course.courseName %></h2>
+        <h2>Welcome to Office Hours for <%= course.courseName %></h2>
         <% if(role == 'ia' || role == 'instructor'){%>
             <a class="button" id="add-schedule-button">Add Schedule</a>
         <%}%>

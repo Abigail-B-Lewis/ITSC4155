@@ -57,6 +57,15 @@ exports.createCourse = (req, res, next) => {
     }).catch(err => next(err));
 }
 
+exports.getCourse = (req, res, next) => {
+    let courseId = req.params.id;
+    Course.findOne({where: {id: courseId}})
+    .then(course => {
+        res.render('./officeHours/course', {course});
+    })
+    .catch(err => next(err));
+}
+
 exports.show = (req, res, next) => {
     let courseId = req.params.id;
     let userId = req.session.user;
@@ -165,12 +174,6 @@ exports.createSchedule = (req, res, next) => {
 exports.getJoin = (req, res) => {
     res.render('./officeHours/join'); // Render the create.ejs view
 };
-
-//get the course schedule view - Najwa
-/* exports.schedule = (req, res) => {
-    res.render('./officeHours/schedule');
-}*/
-
 
 //TODO: test once route is created
 exports.join = (req, res, next) => {

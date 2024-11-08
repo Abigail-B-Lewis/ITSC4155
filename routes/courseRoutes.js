@@ -19,13 +19,13 @@ router.post('/join', controller.join);
 //get view for joining a course
 router.get('/join', isLoggedIn, controller.getJoin);
 
-//gets an individual course
-router.get('/:id', validateId, controller.show);
+//get view for individual course
+router.get('/:id', validateId, controller.getCourse);
+
+//gets an individual schedule
+router.get('/:id/schedule', validateId, controller.show);
 
 //post a new schedule to the database
 router.post('/:id/schedule', controller.createSchedule);
-
-//get course view for adding schedule by Najwa
-// router.get('/schedule', controller.schedule)
 
 module.exports = router;  
