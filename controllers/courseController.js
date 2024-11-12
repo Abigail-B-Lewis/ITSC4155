@@ -1,5 +1,5 @@
 const e = require('connect-flash');
-const {Course, Schedule, User, Roster} = require('../models/index.js');
+const {Course, Schedule, User, Roster, Question} = require('../models/index.js');
 const { v4: uuidv4 } = require('uuid');
 
 exports.index = (req, res, next) => {
@@ -262,4 +262,32 @@ exports.join = (req, res, next) => {
     }
 }
 
+// Adds a question to the database
+exports.createQuestion = (req, res, next) => {
+    const question = req.body; // Expecting text and tag fields only
+    const user = req.session.user;
+    const courseId = req.params.id;
 
+    // First, find the user's role in the course
+    Roster.findOne({ where: { userId: user.id, courseId: courseId } })
+        .then(roster => {
+            if (!roster) {
+                req.flash('error', 'User is not enrolled in this course.');
+                return res.redirect(`/courses/${courseId}`);
+            }
+
+            const role = roster.role;
+
+            // If role is found, create the question
+            return Question.create({
+                courseId: courseId,
+                userId: user,
+                text: question.text,
+                tag: question.tag
+            }).then(createdQuestion => {
+                // Pass question and role to the view - main course page - front end will display based on role
+                res.render('./officeHours/course', { createdQuestion, role });
+            });
+        })
+        .catch(err => next(err));
+};
