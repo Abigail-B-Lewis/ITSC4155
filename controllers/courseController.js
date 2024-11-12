@@ -58,12 +58,29 @@ exports.createCourse = (req, res, next) => {
 }
 
 exports.getCourse = (req, res, next) => {
-    let courseId = req.params.id;
-    Course.findOne({where: {id: courseId}})
-    .then(course => {
-        res.render('./officeHours/course', {course});
+    let cid = req.params.id;
+    let uid = req.session.user;
+    let role;
+    Course.findOne({where: {id: cid}})
+    .then(course =>{
+        Roster.findOne({where: {courseId: cid, userId: uid}})
+        .then(roster =>{
+            if(roster){
+                role = roster.role;
+                if(role == 'student'){
+                    console.log('student view') //Once question form is created, direct to there
+                }else{
+                    //Part of story 29 - view office hours queue
+                    //Will get questions before rendering in that branch
+                    res.render('./officeHours/course');
+                }
+            }else{
+                req.flash('error', 'You are not enrolled in this course');
+                res.redirect('back')
+            }
+        }).catch(err => next(err))
     })
-    .catch(err => next(err));
+    .catch(err => next(err))
 }
 
 exports.show = (req, res, next) => {
@@ -244,3 +261,5 @@ exports.join = (req, res, next) => {
         .catch(err => next(err));
     }
 }
+
+
