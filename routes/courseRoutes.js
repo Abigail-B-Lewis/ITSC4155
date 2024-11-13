@@ -28,4 +28,7 @@ router.get('/:id/schedule', validateId, controller.show);
 //post a new schedule to the database
 router.post('/:id/schedule', controller.createSchedule);
 
+//post a question to the database
+router.post('/:id/questions', controller.createQuestion);
+
 module.exports = router;  

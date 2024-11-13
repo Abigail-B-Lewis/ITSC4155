@@ -50,7 +50,7 @@ sequelize.sync({ alter: true })
     console.log("Error syncing models to the database: ", err);   
   });
 
-  module.exports = {Sequelize, sequelize, User, Course, Schedule, Roster};
+  module.exports = {Sequelize, sequelize, User, Course, Schedule, Roster, Question};
 
 // 'use strict';
 
