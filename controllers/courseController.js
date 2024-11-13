@@ -264,30 +264,23 @@ exports.join = (req, res, next) => {
 
 // Adds a question to the database
 exports.createQuestion = (req, res, next) => {
-    const question = req.body; // Expecting text and tag fields only
-    const user = req.session.user;
+    const { text, tag } = req.body; // Only expect text and tag fields
+    const userId = req.session.user;
     const courseId = req.params.id;
 
-    // First, find the user's role in the course
-    Roster.findOne({ where: { userId: user.id, courseId: courseId } })
+    Roster.findOne({ where: { userId, courseId } })
         .then(roster => {
             if (!roster) {
                 req.flash('error', 'User is not enrolled in this course.');
                 return res.redirect(`/courses/${courseId}`);
             }
 
-            const role = roster.role;
-
-            // If role is found, create the question
-            return Question.create({
-                courseId: courseId,
-                userId: user,
-                text: question.text,
-                tag: question.tag
-            }).then(createdQuestion => {
-                // Pass question and role to the view - main course page - front end will display based on role
-                res.render('./officeHours/course', { createdQuestion, role });
-            });
+            // Create the question if user is enrolled
+            return Question.create({ courseId, userId, text, tag });
+        })
+        .then(() => {
+            req.flash('success', 'Question created successfully.');
+            res.redirect(`/courses/${courseId}`);
         })
         .catch(err => next(err));
 };
