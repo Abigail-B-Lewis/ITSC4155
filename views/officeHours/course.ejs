@@ -6,6 +6,27 @@
     </div> 
     <div class="queue-container"> 
         <p>Here is where you will find information about the queue</p>
+        <%if (role === 'ia'){%>
+            <% if (questions.length) { %>
+                <div class="question-grid">
+                  <% questions.forEach(question => { %>
+                    <div class="question-container">
+                      <div class="tag">
+                        <p><%= question.tag %></p>
+                      </div>
+                      <div class="studentName">
+                        <p><%=question.userId.fullName%></p>
+                      </div>
+                      <div class="question">
+                        <p><%=question.text%></p>
+                      </div>
+                    </div>
+                  <% }); %>
+                </div>
+              <% } else { %>
+                <p class="noQuestions">There are no questions to display</p>
+              <% } %>
+        <%}%>
     </div>
 </main>
 <%- include('../partials/footer.ejs')%>
