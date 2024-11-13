@@ -68,11 +68,11 @@ exports.getCourse = (req, res, next) => {
             if(roster){
                 role = roster.role;
                 if(role == 'student'){
-                    console.log('student view') //Once question form is created, direct to there
+                    res.render('./officeHours/question', {course});
                 }else{
                     //Part of story 29 - view office hours queue
                     //Will get questions before rendering in that branch
-                    res.render('./officeHours/course');
+                    res.render('./officeHours/course', {course});
                 }
             }else{
                 req.flash('error', 'You are not enrolled in this course');
