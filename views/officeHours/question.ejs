@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs')%>
+<main>
+    <div class="course-header">
+        <h2>Welcome to <%= course.courseName %></h2>
+            <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
+    </div> 
+    <div class="question-container"> 
+        <h3>Office Hour Queue Form</h3>
+        <p>Post your question in the form below</p>
+        <form action="/courses/<%=course.id %>/questions" method="POST">
+            <div class="question-row">
+                <label for="question">Question</label>
+                <textarea id="question" name="question" placeholder="Type your question here..."></textarea>
+            </div>
+            <div class="tag-row">
+                <label for="input-tag">Question Tag</label>
+                <select  name="tag" id="input-tag" required>
+                    <option value="">Select a tag</option>
+                    <option value="lab">Lab</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="prepwork">PrepWork</option>
+                    <option value="misc">Other</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+<script>
+
+</script>
+</main>
+<%- include('../partials/footer.ejs')%>
