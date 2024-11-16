@@ -1,5 +1,5 @@
 const e = require('connect-flash');
-const {Course, Schedule, User, Roster} = require('../models/index.js');
+const {Course, Schedule, User, Roster, Question} = require('../models/index.js');
 const { v4: uuidv4 } = require('uuid');
 
 exports.index = (req, res, next) => {
@@ -58,12 +58,29 @@ exports.createCourse = (req, res, next) => {
 }
 
 exports.getCourse = (req, res, next) => {
-    let courseId = req.params.id;
-    Course.findOne({where: {id: courseId}})
-    .then(course => {
-        res.render('./officeHours/course', {course});
+    let cid = req.params.id;
+    let uid = req.session.user;
+    let role;
+    Course.findOne({where: {id: cid}})
+    .then(course =>{
+        Roster.findOne({where: {courseId: cid, userId: uid}})
+        .then(roster =>{
+            if(roster){
+                role = roster.role;
+                if(role == 'student'){
+                    res.render('./officeHours/question', {course});
+                }else{
+                    //Part of story 29 - view office hours queue
+                    //Will get questions before rendering in that branch
+                    res.render('./officeHours/course', {course});
+                }
+            }else{
+                req.flash('error', 'You are not enrolled in this course');
+                res.redirect('back')
+            }
+        }).catch(err => next(err))
     })
-    .catch(err => next(err));
+    .catch(err => next(err))
 }
 
 exports.show = (req, res, next) => {
@@ -244,3 +261,26 @@ exports.join = (req, res, next) => {
         .catch(err => next(err));
     }
 }
+
+// Adds a question to the database
+exports.createQuestion = (req, res, next) => {
+    const { text, tag } = req.body; // Only expect text and tag fields
+    const userId = req.session.user;
+    const courseId = req.params.id;
+
+    Roster.findOne({ where: { userId, courseId } })
+        .then(roster => {
+            if (!roster) {
+                req.flash('error', 'User is not enrolled in this course.');
+                return res.redirect(`/courses/${courseId}`);
+            }
+
+            // Create the question if user is enrolled
+            return Question.create({ courseId, userId, text, tag });
+        })
+        .then(() => {
+            req.flash('success', 'Question created successfully.');
+            res.redirect(`/courses/${courseId}`);
+        })
+        .catch(err => next(err));
+};
