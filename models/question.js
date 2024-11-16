@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = (sequelize, Sequelize) => {
     const Question = sequelize.define('question', {
         id: {
@@ -58,6 +60,11 @@ module.exports = (sequelize, Sequelize) => {
         }
     }, {
         timestamps: false,
+        hooks: {
+            beforeValidate: async (question) => {
+                question.id = uuidv4();
+              },
+        }
     });
 
     return Question;
