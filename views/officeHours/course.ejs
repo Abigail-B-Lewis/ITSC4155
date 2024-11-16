@@ -11,10 +11,10 @@
                   <% questions.forEach(question => { %>
                     <div class="question-container">
                       <div class="tag">
-                        <p><%= question.tag %></p>
+                        <p><%=question.tag %></p>
                       </div>
                       <div class="studentName">
-                        <p><%=question.userId.fullName%></p>
+                        <p><%=question.user.fullName%></p>
                       </div>
                       <div class="question">
                         <p><%=question.text%></p>
