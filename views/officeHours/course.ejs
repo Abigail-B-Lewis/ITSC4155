@@ -11,7 +11,7 @@
                   <% questions.forEach(question => { %>
                     <div class="question-container">
                       <div class="tag">
-                        <p><%=question.tag %></p>
+                        <p id="tag"><%=question.tag %></p>
                       </div>
                       <div class="studentName">
                         <p><%=question.user.fullName%></p>
@@ -19,6 +19,7 @@
                       <div class="question">
                         <p><%=question.text%></p>
                       </div>
+                      <button class="claim">Claim</button>
                     </div>
                   <% }); %>
                 </div>

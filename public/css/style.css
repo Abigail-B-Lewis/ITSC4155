@@ -433,3 +433,51 @@ input[type="submit"]{
   background-color: #f7f7f7;
   border: 1px solid #ccc;
 }
+.tag{
+  background-color: #999;
+  width: 13%;
+  position: relative;
+  top: 5px;
+  left: 10px;
+  border-radius: 5px;
+}
+#tag{
+  position: relative;
+  left: 15px;
+}
+.studentName{
+  position: relative;
+  top: -15px;
+  left: 300px;
+}
+.question-grid{
+  background-color: #ccc;
+  border-radius: 15px;
+  position: relative;
+  top: 10px;
+}
+.question{
+  background-color: #f7f7f7;
+  width: 50%;
+  padding-bottom: 10%;
+  position: relative;
+  left: 100px;
+  border-radius: 5px;
+}
+.claim{
+  width: 25%;
+  margin-top: 1rem;
+  background-color: #A49665;
+  color: black;
+  font-family:"Inter";
+  padding: 10px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  align-items: center;
+  font-weight: bold;
+  position: relative;
+  left: 300px;
+  top: -10px;
+}
