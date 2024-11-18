@@ -1,6 +1,7 @@
 const e = require('connect-flash');
 const {Course, Schedule, User, Roster, Question} = require('../models/index.js');
 const { v4: uuidv4 } = require('uuid');
+const { Op } = require('sequelize');
 
 exports.index = (req, res, next) => {
     const userId = req.session.user;
@@ -70,9 +71,27 @@ exports.getCourse = (req, res, next) => {
                 if(role == 'student'){
                     res.render('./officeHours/question', {course});
                 }else{
-                    //Part of story 29 - view office hours queue
-                    //Will get questions before rendering in that branch
-                    res.render('./officeHours/course', {course});
+                    Question.findAll({
+                        where: {
+                          CourseId: cid,
+                          status: {
+                            [Op.or]: ['unclaimed', 'unresolved'] 
+                          }
+                        },
+                        include: [
+                            {
+                              model: User, // Assuming `User` is the Sequelize model for the user table
+                              attributes: ['fullName'] // Specify the column(s) you want to include from the User table
+                            }
+                        ],
+                        order: [['createdAt', 'ASC']]
+                    }).then(questions => {
+                        for(let question of questions){
+                            console.log(question.user);
+                        }
+                        res.render('./officeHours/course', {questions, course})
+                      })
+                      .catch(err => next(err));
                 }
             }else{
                 req.flash('error', 'You are not enrolled in this course');

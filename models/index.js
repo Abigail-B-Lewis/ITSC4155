@@ -2,7 +2,7 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('officeq', 'root', 'Password', {
+const sequelize = new Sequelize('officeq', 'root', 'password', {
   dialect: 'mysql'
 });
 
@@ -35,8 +35,10 @@ User.belongsToMany(Course, { through: Roster, foreignKey: 'userId' });
 Course.belongsToMany(User, { through: Roster, foreignKey: 'courseId' });
 Question.belongsTo(Course, { foreignKey: 'courseId' });
 Question.belongsTo(User, { foreignKey: 'userId'});
+User.hasMany(Question, {foreignKey: 'userId'});
+Course.hasMany(Question, {foreignKey: 'courseId'});
 
-sequelize.authenticate().then(()=>{
+sequelize.authenticate().then(()=>{  
   console.log("Connection successful");
 }).catch((err) => {
   console.log("Error connecting to the database");
@@ -51,47 +53,3 @@ sequelize.sync({ alter: true })
   });
 
   module.exports = {Sequelize, sequelize, User, Course, Schedule, Roster, Question};
-
-// 'use strict';
-
-// const fs = require('fs');
-// const path = require('path');
-// const Sequelize = require('sequelize');
-// const process = require('process');
-// const basename = path.basename(__filename);
-// const env = process.env.NODE_ENV || 'development';
-// const config = require(__dirname + '/../config/config.json')[env];
-// const db = {};
-
-// let sequelize;
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
-
-// fs
-//   .readdirSync(__dirname)
-//   .filter(file => {
-//     return (
-//       file.indexOf('.') !== 0 &&
-//       file !== basename &&
-//       file.slice(-3) === '.js' &&
-//       file.indexOf('.test.js') === -1
-//     );
-//   })
-//   .forEach(file => {
-//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-//     db[model.name] = model;
-//   });
-
-// Object.keys(db).forEach(modelName => {
-//   if (db[modelName].associate) {
-//     db[modelName].associate(db);
-//   }
-// });
-
-// db.sequelize = sequelize;
-// db.Sequelize = Sequelize;
-
-// module.exports = db;
