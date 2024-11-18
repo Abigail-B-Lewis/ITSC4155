@@ -6,6 +6,28 @@
     </div> 
     <div class="queue-container"> 
         <p>Here is where you will find information about the queue</p>
+        <div class="filter-options">
+            <p id="filterByTags">Filter by tags:</p>
+            <div class="filter">
+                <div class="lab">
+                    <input type="checkbox" id="lab" name="lab" />
+                    <label for="lab">Lab</label>
+                </div>
+                <div class="quiz">
+                    <input type="checkbox" id="prepwork" name="prepwork" />
+                    <label for="prepwork">Prepwork</label>
+                </div>
+                <div class="prepwork">
+                    <input type="checkbox" id="quiz" name="quiz" />
+                    <label for="quiz">Quiz</label>
+                </div>
+                <div class="other">
+                    <input type="checkbox" id="other" name="other" />
+                    <label for="other">Other</label>
+                </div>
+            </div>
+            <button class="apply">Apply</button>
+        </div>
     </div>
 </main>
 <%- include('../partials/footer.ejs')%>
