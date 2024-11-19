@@ -303,3 +303,50 @@ exports.createQuestion = (req, res, next) => {
         })
         .catch(err => next(err));
 };
+
+exports.updateStatus = (req, res, next) => {
+    const { id: courseId, qid } = req.params; // Extract courseId and qid from the request parameters
+    const status = req.body.status; // Extract status from the button value in the request body
+    console.log(status);
+
+    Question.findByPk(qid)
+        .then((question) => {
+            if (!question) {
+                req.flash('error', 'Question not found.');
+                return res.redirect(`/courses/${courseId}`);
+            }
+
+            if (status === 'resolved') {
+                // Delete the question if the status is resolved
+                return question
+                    .destroy()
+                    .then(() => {
+                        req.flash('success', 'Question resolved and removed from the queue.');
+                        res.redirect(`/courses/${courseId}`);
+                    });
+            } else {
+                // Update the status for other values
+                question.status = status;
+                return question.save();
+            }
+        })
+        .then((updatedQuestion) => {
+            if (!updatedQuestion) return; // If resolved, the question is deleted, so no further action is needed
+
+            // Set appropriate flash message based on the new status
+            if (status === 'claimed') {
+                req.flash('success', 'Status has been updated to claimed. Student removed from queue.');
+            } else if (status === 'unresolved') {
+                req.flash('success', 'Status has been updated to unresolved. Student added back to queue.');
+            } else {
+                req.flash('error', 'Invalid status value.');
+            }
+
+            res.redirect(`/courses/${courseId}`);
+        })
+        .catch((error) => {
+            console.error('Error updating question status:', error);
+            req.flash('error', 'An unexpected error occurred while updating the status.');
+            res.redirect(`/courses/${courseId}`);
+        });
+};

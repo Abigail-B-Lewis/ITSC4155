@@ -31,4 +31,7 @@ router.post('/:id/schedule', controller.createSchedule);
 //post a question to the database
 router.post('/:id/questions', controller.createQuestion);
 
+//update the status after claiming a student
+router.put('/:id/questions/:qid', validateId, controller.updateStatus);
+
 module.exports = router;  

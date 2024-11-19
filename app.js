@@ -5,6 +5,7 @@ const session = require('express-session');
 const sequelize = require('./models/index.js');
 const db = require('./models');
 const User = require('./models/user')
+const methodOverride = require('method-override');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const flash = require('connect-flash');
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 // app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use('/users', userRoutes);
 app.use('/courses', courseRoutes);
 
