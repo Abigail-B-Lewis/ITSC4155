@@ -2,33 +2,34 @@
 <main>
     <div class="course-header">
         <h2>Welcome to <%= course.courseName %></h2>
-            <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
+        <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
     </div> 
     <div class="queue-container"> 
-        <p>Here is where you will find information about the queue</p>
-            <% if (questions.length) { %>
-                <div class="question-grid">
-                  <% questions.forEach(question => { %>
-                    <div class="question-container" id = >
-                      <div class="tag">
-                        <p id="tag"><%=question.tag %></p>
-                      </div>
-                      <div class="studentName">
-                        <p><%=question.user.fullName%></p>
-                      </div>
-                      <div class="question">
-                        <p><%=question.text%></p>
-                      </div>
-                      <button class="claim">Claim</button>
-                      <!-- <button type="submit" value="claimed" name="status">claimed</button>    This needs to be wrapped in a form--> 
+        <p class="noQuestions">Here is where you will find information about the queue</p>
+        <% if (questions.length) { %>
+            <div class="question-grid">
+                <% questions.forEach(question => { %>
+                    <div class="question-card">
+                        <div class="card-header">
+                            <span class="tag"><%= question.tag %></span>
+                            <span class="student-name"><%= question.user.fullName %></span>
+                        </div>
+                        <div class="card-body">
+                            <p class="question-text"><%= question.text %></p>
+                        </div>
+                        <div class="card-footer">
+                            <form class="claim-form" method="POST" action="/courses/<%= course.id %>/questions/<%= question.id %>?_method=PUT">
+                                <button class="claim-button" type="submit" value="claimed" name="status">Claim</button>
+                            </form>
+                        </div>
                     </div>
-                  <% }); %>
-                </div>
-              <% } else { %>
-                <p class="noQuestions">There are no questions to display.</p>
-              <% } %>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="noQuestions">There are no questions to display.</p>
+        <% } %>
     </div>
-</main>
+</main> 
 <script>
   const socket = new WebSocket('ws://localhost:3000');
 

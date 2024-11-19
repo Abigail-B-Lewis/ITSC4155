@@ -363,13 +363,15 @@ exports.updateStatus = (req, res, next) => {
             // Set appropriate flash message based on the new status
             if (status === 'claimed') {
                 req.flash('success', 'Status has been updated to claimed. Student removed from queue.');
+                res.redirect(`/courses/${courseId}`); //redirect to the after claim view that najwah makes
             } else if (status === 'unresolved') {
                 req.flash('success', 'Status has been updated to unresolved. Student added back to queue.');
+                res.redirect(`/courses/${courseId}`);
             } else {
                 req.flash('error', 'Invalid status value.');
+                res.redirect(`/courses/${courseId}`);
             }
 
-            res.redirect(`/courses/${courseId}`);
         })
         .catch((error) => {
             console.error('Error updating question status:', error);
