@@ -87,9 +87,6 @@ exports.getCourse = (req, res, next) => {
                         ],
                         order: [['createdAt', 'ASC']]
                     }).then(questions => {
-                        for(let question of questions){
-                            console.log(question.user);
-                        }
                         res.render('./officeHours/course', {questions, course})
                       })
                       .catch(err => next(err));
@@ -305,6 +302,7 @@ exports.createQuestion = (req, res, next) => {
                         text: question.text,
                         tag: question.tag,
                         fullName: user.fullName,
+                        id: question.id
                     };
                     req.broadcast(JSON.stringify(questionData));
                     req.flash('success', 'Question created successfully.');
@@ -318,15 +316,23 @@ exports.createQuestion = (req, res, next) => {
 exports.updateStatus = (req, res, next) => {
     const { id: courseId, qid } = req.params; // Extract courseId and qid from the request parameters
     const status = req.body.status; // Extract status from the button value in the request body
+    let fullName;
     console.log(status);
 
-    Question.findByPk(qid)
+    Question.findByPk(qid, {
+        include: [
+            {
+                model: User,
+                attributes: ['fullName'] // Include only the fullName attribute
+            }
+        ]
+        })
         .then((question) => {
             if (!question) {
                 req.flash('error', 'Question not found.');
                 return res.redirect(`/courses/${courseId}`);
             }
-
+            fullName = question.user.fullName;
             if (status === 'resolved') {
                 // Delete the question if the status is resolved
                 return question
@@ -343,7 +349,17 @@ exports.updateStatus = (req, res, next) => {
         })
         .then((updatedQuestion) => {
             if (!updatedQuestion) return; // If resolved, the question is deleted, so no further action is needed
+            
+            const questionData = {
+                eventType: 'updateQuestion', 
+                status: status, 
+                text: updatedQuestion.text,
+                tag: updatedQuestion.tag,
+                fullName: fullName,
+                id: updatedQuestion.id
+            };
 
+            req.broadcast(JSON.stringify(questionData));
             // Set appropriate flash message based on the new status
             if (status === 'claimed') {
                 req.flash('success', 'Status has been updated to claimed. Student removed from queue.');

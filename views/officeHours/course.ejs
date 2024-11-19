@@ -9,7 +9,7 @@
             <% if (questions.length) { %>
                 <div class="question-grid">
                   <% questions.forEach(question => { %>
-                    <div class="question-container">
+                    <div class="question-container" id = >
                       <div class="tag">
                         <p id="tag"><%=question.tag %></p>
                       </div>
@@ -41,6 +41,12 @@
       if(question.eventType == 'newQuestion'){
         addQuestionToDom(question);
       }
+      if(question.eventType == 'updateQuestion' && question.status == 'unresolved'){
+        addQuestionToDOm(question);
+      }
+      if(question.eventType == 'updateQuestion' && question.status == 'claimed'){
+        removeQuestionFromDom(question);
+      }
   };
 
   // Handle WebSocket errors
@@ -69,6 +75,7 @@
     
     const questionContainer = document.createElement('div')
     questionContainer.classList.add('question-container');
+    questionContainer.id = question.id;
 
     const tagDiv = document.createElement('div')
     tagDiv.classList.add('tag');
@@ -101,6 +108,22 @@
 
     questionGrid.appendChild(questionContainer);
     console.log('addition complete');
+  }
+
+  function removeQuestionFromDom(question){
+    const questionContainer = document.getElementById(question.id);
+    questionContainer.remove();
+
+    const questionGrid = document.getElementsByClassName('question-grid')[0];
+    const questionContainers = document.getElementsByClassName('question-container');
+    if(questionContainers.length == 0){
+      const p = document.createElement('p')
+      p.classList.add('noQuestions');
+      p.textContent = "There are no questions to display."
+      queueContainer = document.getElementsByClassName('queue-container')[0];
+      questionGrid.remove();
+      queueContainer.appendChild(p);
+    }
   }
 
 </script>
