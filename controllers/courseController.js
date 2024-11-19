@@ -302,7 +302,8 @@ exports.createQuestion = (req, res, next) => {
                         text: question.text,
                         tag: question.tag,
                         fullName: user.fullName,
-                        id: question.id
+                        id: question.id,
+                        courseId: question.courseId
                     };
                     req.broadcast(JSON.stringify(questionData));
                     req.flash('success', 'Question created successfully.');
@@ -356,7 +357,8 @@ exports.updateStatus = (req, res, next) => {
                 text: updatedQuestion.text,
                 tag: updatedQuestion.tag,
                 fullName: fullName,
-                id: updatedQuestion.id
+                id: updatedQuestion.id,
+                courseId: updatedQuestion.courseId
             };
 
             req.broadcast(JSON.stringify(questionData));
@@ -374,7 +376,7 @@ exports.updateStatus = (req, res, next) => {
 
         })
         .catch((error) => {
-            console.error('Error updating question status:', error);
+            console.log('Error updating question status:', error);
             req.flash('error', 'An unexpected error occurred while updating the status.');
             res.redirect(`/courses/${courseId}`);
         });

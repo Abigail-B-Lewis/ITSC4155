@@ -9,7 +9,7 @@
         <% if (questions.length) { %>
             <div class="question-grid">
                 <% questions.forEach(question => { %>
-                    <div class="question-card">
+                    <div class="question-card" id = <%= question.id %>>
                         <div class="card-header">
                             <span class="tag"><%= question.tag %></span>
                             <span class="student-name"><%= question.user.fullName %></span>
@@ -43,7 +43,7 @@
         addQuestionToDom(question);
       }
       if(question.eventType == 'updateQuestion' && question.status == 'unresolved'){
-        addQuestionToDOm(question);
+        addQuestionToDom(question);
       }
       if(question.eventType == 'updateQuestion' && question.status == 'claimed'){
         removeQuestionFromDom(question);
@@ -62,7 +62,7 @@
 
   function addQuestionToDom(question){
     console.log('reached function');
-    const noQuestions = document.getElementsByClassName('noQuestions')[0];
+    const noQuestions = document.getElementsByClassName('noQuestions')[1];
     let questionGrid;
     if(noQuestions){
       noQuestions.remove();
@@ -75,39 +75,47 @@
     }
     
     const questionContainer = document.createElement('div')
-    questionContainer.classList.add('question-container');
+    questionContainer.classList.add('question-card');
     questionContainer.id = question.id;
 
-    const tagDiv = document.createElement('div')
-    tagDiv.classList.add('tag');
-    const tagP = document.createElement('p')
-    tagP.id = 'tag';
-    tagP.textContent = question.tag;
-    console.log(tagDiv);
-    tagDiv.appendChild(tagP);
+    const cardHeader = document.createElement('div');
+    cardHeader.classList.add('card-header');
+    const tag = document.createElement('span');
+    tag.classList.add('tag');
+    tag.textContent = question.tag;
+    const studentName = document.createElement('span');
+    studentName.classList.add('student-name');
+    studentName.textContent = question.fullName;
+    cardHeader.appendChild(tag);
+    cardHeader.appendChild(studentName);
 
-    const nameDiv = document.createElement('div');
-    nameDiv.classList.add('studentName');
-    const nameP = document.createElement('p')
-    nameP.textContent = question.fullName;
-    nameDiv.appendChild(nameP);
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+    const text = document.createElement('p');
+    text.classList.add('question-text');
+    text.textContent = question.text;
+    cardBody.appendChild(text);
 
-    const textDiv = document.createElement('div')
-    textDiv.classList.add('question');
-    const textP = document.createElement('p');
-    textP.textContent = question.text;
-    textDiv.appendChild(textP);
+    const cardFooter = document.createElement('div');
+    cardFooter.classList.add('card-footer');
+    const submitForm = document.createElement('form');
+    submitForm.classList.add('claim-form');
+    submitForm.method = "POST";
+    submitForm.action = "/courses/" + question.courseId + "/questions" + question.id + "?_method=PUT"
+    const btn = document.createElement('button');
+    btn.classList.add('claim-button');
+    btn.type = "submit";
+    btn.value = "claimed";
+    btn.name = "status";
+    btn.textContent = "Claim";
+    submitForm.appendChild(btn);
+    cardFooter.appendChild(submitForm);
 
-    const btn = document.createElement('button')
-    btn.classList.add('claim');
-    btn.textContent = 'Claim';
-
-    questionContainer.appendChild(tagDiv);
-    questionContainer.appendChild(nameDiv);
-    questionContainer.appendChild(textDiv);
-    questionContainer.appendChild(btn);
-
+    questionContainer.appendChild(cardHeader);
+    questionContainer.appendChild(cardBody);
+    questionContainer.appendChild(cardFooter);
     questionGrid.appendChild(questionContainer);
+
     console.log('addition complete');
   }
 
@@ -116,7 +124,7 @@
     questionContainer.remove();
 
     const questionGrid = document.getElementsByClassName('question-grid')[0];
-    const questionContainers = document.getElementsByClassName('question-container');
+    const questionContainers = document.getElementsByClassName('question-card');
     if(questionContainers.length == 0){
       const p = document.createElement('p')
       p.classList.add('noQuestions');
