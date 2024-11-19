@@ -44,7 +44,7 @@ sequelize.authenticate().then(()=>{
   console.log("Error connecting to the database");
 });
 
-sequelize.sync({ alter: true }) 
+sequelize.sync({ alter: false }) 
   .then(() => {
     console.log("All models were synchronized successfully.");
   })

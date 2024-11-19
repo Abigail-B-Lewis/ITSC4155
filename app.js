@@ -8,9 +8,39 @@ const User = require('./models/user')
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const flash = require('connect-flash');
+const http = require('http')
+const WebSocket = require('ws');
 
 //create app
 const app = express();
+const server = http.createServer(app);
+
+const wss = new WebSocket.Server({ server });
+
+const broadcast = (data) => {
+    console.log("broadcast data:", data);
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(data);
+        }
+    });
+};
+
+// Event listener for new WebSocket connections
+wss.on('connection', (ws) => {
+    console.log('A new client has connected.');
+    ws.on('message', (message) => {
+        console.log('Received message from client:', message);
+    });
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+
+    ws.on('error', (error) => {
+        console.log('WebSocket error:', error);
+    });
+});
 
 //configure app  
 const port = 3000;
@@ -26,6 +56,7 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
+    req.broadcast = broadcast;
     res.locals.user = req.session.user||null;
     res.locals.role = req.session.role||null;
     res.locals.errorMessages = req.flash('error');
@@ -47,7 +78,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
@@ -68,3 +99,6 @@ app.use((err, req, res, next) => {
     res.status(err.status);
     res.render('error', {error: err});
 });
+
+// app.set('broadcast', broadcast);
+// module.exports = app;

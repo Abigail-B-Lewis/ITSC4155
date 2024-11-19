@@ -1,7 +1,8 @@
 const e = require('connect-flash');
 const {Course, Schedule, User, Roster, Question} = require('../models/index.js');
-const { v4: uuidv4 } = require('uuid');
+
 const { Op } = require('sequelize');
+const {broadcast} = require('../app.js');
 
 exports.index = (req, res, next) => {
     const userId = req.session.user;
@@ -293,13 +294,23 @@ exports.createQuestion = (req, res, next) => {
                 req.flash('error', 'User is not enrolled in this course.');
                 return res.redirect(`/courses/${courseId}`);
             }
-
             // Create the question if user is enrolled
-            return Question.create({ courseId, userId, text, tag });
-        })
-        .then(() => {
-            req.flash('success', 'Question created successfully.');
-            res.redirect(`/courses/${courseId}`);
-        })
-        .catch(err => next(err));
+
+            Question.create({ courseId, userId, text, tag })
+            .then(question => {
+                User.findOne({where: {id: userId}, attributes: ['fullName']})
+                .then(user => {
+                    const questionData = {
+                        eventType: 'newQuestion',  
+                        text: question.text,
+                        tag: question.tag,
+                        fullName: user.fullName,
+                    };
+                    req.broadcast(JSON.stringify(questionData));
+                    req.flash('success', 'Question created successfully.');
+                    res.redirect(`/courses/${courseId}`);
+                })
+            })
+            .catch(err => next(err));
+        }).catch(err => next(err));
 };
