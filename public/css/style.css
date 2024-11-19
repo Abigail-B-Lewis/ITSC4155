@@ -481,3 +481,9 @@ input[type="submit"]{
   left: 300px;
   top: -10px;
 }
+
+.noQuestions {
+  margin: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
