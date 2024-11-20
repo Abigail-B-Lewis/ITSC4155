@@ -343,7 +343,7 @@ exports.updateStatus = (req, res, next) => {
                         return question.save()
                             .then(() => {
                                 // Render AFTER CLAIM view with course and updated question data
-                                res.render('./officeHours/dummy', { course, question });
+                                res.render('./officeHours/claim', { course, question });
                             });
                     })
                     .catch(err => { next(err); });
