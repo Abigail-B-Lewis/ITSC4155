@@ -30,4 +30,41 @@
         </div>
     </div>
 </main>
+<script>
+    const filters = document.querySelectorAll("input[type=submit]");
+    for(let filter of filters){
+        filter.addEventListener('change', filterSchedule);
+    }
+/* This function allows a user to apply filters to the schedule page */
+function filterSchedule(){
+    let filterFor = [];
+    let count = 0;
+    /*iterates through filters and adds checked filters to an array. if a filter is unchecked, count increments */
+    for(let filter of filters){
+        if(filter.checked){
+            filterFor.push(filter.id);
+        }else{
+            count += 1
+        }
+    }
+    /*If the count of unchecked filters is equal to the length of the filter array (no filters are checked), then closed is removed from all item classlists and the function ends. Default is all items show */
+    if(count === filters.length){
+        for(let item of scheduleItems){
+            item.classList.remove('closed');
+        }
+        return;
+    }
+    /* Iterates through the filters and scheduleItems. If the current schedule item contains the current filter then remove the 'closed' class (so it should be displayed). Otherwise, you add the closed class so that unchecked filters are not displayed */
+for(let filter of filterFor){
+    for(let item of scheduleItems){
+        if(item.classList.contains(filter)){
+            item.classList.remove('closed')
+        }else{
+            item.classList.add('closed');
+        }
+    }
+}
+}
+
+</script>
 <%- include('../partials/footer.ejs')%>
