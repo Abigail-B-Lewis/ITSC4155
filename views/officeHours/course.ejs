@@ -4,30 +4,28 @@
         <h2>Welcome to <%= course.courseName %></h2>
         <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
     </div> 
-    <div class="queue-container"> 
         <p class="noQuestions">Here is where you will find information about the queue</p>
-        <div class="filter-options">
-            <p id="filterByTags">Filter by tags:</p>
-            <div class="filter">
-                <div class="lab">
-                    <input type="checkbox" id="lab" name="lab" />
-                    <label for="lab">Lab</label>
-                </div>
-                <div class="quiz">
-                    <input type="checkbox" id="prepwork" name="prepwork" />
-                    <label for="prepwork">Prepwork</label>
-                </div>
-                <div class="prepwork">
-                    <input type="checkbox" id="quiz" name="quiz" />
-                    <label for="quiz">Quiz</label>
-                </div>
-                <div class="other">
-                    <input type="checkbox" id="other" name="other" />
-                    <label for="other">Other</label>
-                </div>
-            </div>
-            <button id="filterbtn" type="submit" class="apply">Apply</button>
+    <div class="filter-options">
+        <p id="filterByTags">Filter by Tags:</p>
+        <div class="lab">
+            <input type="checkbox" id="lab" name="lab" />
+            <label for="lab">Lab</label>
         </div>
+        <div class="quiz">
+            <input type="checkbox" id="prepwork" name="prepwork" />
+            <label for="prepwork">Prepwork</label>
+        </div>
+        <div class="prepwork">
+            <input type="checkbox" id="quiz" name="quiz" />
+            <label for="quiz">Quiz</label>
+        </div>
+        <div class="other">
+            <input type="checkbox" id="other" name="other" />
+            <label for="other">Other</label>
+        </div>
+        <button id="filterbtn" type="submit" class="filter-button">Apply</button>
+    </div>
+    <div class="queue-container"> 
         <% if (questions.length) { %>
             <div class="question-grid">
                 <% questions.forEach(question => { %>
@@ -51,7 +49,6 @@
             <p class="noQuestions">There are no questions to display.</p>
         <% } %>
     </div> 
-    </div>
 </main>
 <script>
     const filters = document.querySelectorAll("input[type=checkbox]");

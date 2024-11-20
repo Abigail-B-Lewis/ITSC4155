@@ -5,19 +5,17 @@
     </div>
     <div class="student-question-container">
         <div class="student-info-row">
-            <label for="input-tag">Question Tag</label>
             <span class="tag"><%= question.tag %></span>
-            <label>Student Name</label>
             <span class="student-name"><%= question.user.fullName %></span>
         </div>
         <div class="question-info-row">
-            <label for="question">Question</label>
+            <label for="question">Question:</label>
             <p class="question-area"><%= question.text %></p>
         </div>
         <div class="resolve-buttons">
             <form class="resolve-container" method="POST" action="/courses/<%= course.id %>/questions/<%= question.id %>?_method=PUT">
-                <button type="submit" value="unresolved" name="status">Unresolved</button>
-                <button type="submit" value="resolved" name="status">Resolved</button>
+                <button class="resolve-button" type="submit" value="unresolved" name="status">Unresolved</button>
+                <button class="unresolve-button" type="submit" value="resolved" name="status">Resolved</button>
           </form>
         </div>
     </div>

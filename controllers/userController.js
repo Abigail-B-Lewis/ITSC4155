@@ -12,10 +12,10 @@ exports.create = (req, res, next) => {
         //TODO: figure out how front-end is displaying login/register forms
         //and redirect to login once account is created.
         req.flash('success', 'Account created successfully!');
-        res.redirect('/users/login')
+        res.redirect('/users/login');
     }).catch(err => {
-        //TODO: proper error handling
-        next(err);
+        req.flash('error', 'Email has already been used!');
+        res.redirect('/users/new');
     });
 };
 

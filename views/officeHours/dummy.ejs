@@ -1,9 +1,0 @@
-<%- include('../partials/header.ejs')%>
-<main>
-    <form class="form-container" method="POST" action="/courses/<%= course.id %>/questions/<%= question.id %>?_method=PUT">
-           <p>placeholder</p>
-           <button type="submit" value="unresolved" name="status">Unresolved</button>
-           <button type="submit" value="resolved" name="status">Resolved</button>
-     </form>
-</main>
-<%- include('../partials/footer.ejs')%>
