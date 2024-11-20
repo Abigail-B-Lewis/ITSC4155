@@ -21,7 +21,9 @@ module.exports = (sequelize, Sequelize) => {
       role: {
         type: Sequelize.STRING,
         allowNull: false,
-        IsIn: [['student', 'ia', 'instructor']],
+        validate: {
+          isIn: [['student', 'ia', 'instructor']], // Correct syntax for 'IsIn' validation
+        },
       },
     },
     {

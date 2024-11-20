@@ -2,10 +2,194 @@
 <main>
     <div class="course-header">
         <h2>Welcome to <%= course.courseName %></h2>
-            <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
+        <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
     </div> 
     <div class="queue-container"> 
-        <p>Here is where you will find information about the queue</p>
+        <p class="noQuestions">Here is where you will find information about the queue</p>
+        <div class="filter-options">
+            <p id="filterByTags">Filter by tags:</p>
+            <div class="filter">
+                <div class="lab">
+                    <input type="checkbox" id="lab" name="lab" />
+                    <label for="lab">Lab</label>
+                </div>
+                <div class="quiz">
+                    <input type="checkbox" id="prepwork" name="prepwork" />
+                    <label for="prepwork">Prepwork</label>
+                </div>
+                <div class="prepwork">
+                    <input type="checkbox" id="quiz" name="quiz" />
+                    <label for="quiz">Quiz</label>
+                </div>
+                <div class="other">
+                    <input type="checkbox" id="other" name="other" />
+                    <label for="other">Other</label>
+                </div>
+            </div>
+            <button type="submit" class="apply">Apply</button>
+        </div>
+        <% if (questions.length) { %>
+            <div class="question-grid">
+                <% questions.forEach(question => { %>
+                    <div class="question-card" id = <%= question.id %>>
+                        <div class="card-header">
+                            <span class="tag"><%= question.tag %></span>
+                            <span class="student-name"><%= question.user.fullName %></span>
+                        </div>
+                        <div class="card-body">
+                            <p class="question-text"><%= question.text %></p>
+                        </div>
+                        <div class="card-footer">
+                            <form class="claim-form" method="POST" action="/courses/<%= course.id %>/questions/<%= question.id %>?_method=PUT">
+                                <button class="claim-button" type="submit" value="claimed" name="status">Claim</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="noQuestions">There are no questions to display.</p>
+        <% } %>
+    </div> 
     </div>
 </main>
+<script>
+    const filters = document.querySelectorAll("input[type=submit]");
+    for(let filter of filters){
+        filter.addEventListener('change', filterSchedule);
+    }
+/* This function allows a user to apply filters to the schedule page */
+function filterSchedule(){
+    let filterFor = [];
+    let count = 0;
+    /*iterates through filters and adds checked filters to an array. if a filter is unchecked, count increments */
+    for(let filter of filters){
+        if(filter.checked){
+            filterFor.push(filter.id);
+        }else{
+            count += 1
+        }
+    }
+    /*If the count of unchecked filters is equal to the length of the filter array (no filters are checked), then closed is removed from all item classlists and the function ends. Default is all items show */
+    if(count === filters.length){
+        for(let item of scheduleItems){
+            item.classList.remove('closed');
+        }
+        return;
+    }
+    /* Iterates through the filters and scheduleItems. If the current schedule item contains the current filter then remove the 'closed' class (so it should be displayed). Otherwise, you add the closed class so that unchecked filters are not displayed */
+for(let filter of filterFor){
+    for(let item of scheduleItems){
+        if(item.classList.contains(filter)){
+            item.classList.remove('closed')
+        }else{
+            item.classList.add('closed');
+        }
+    }
+}
+}
+  const socket = new WebSocket('ws://localhost:3000');
+
+  socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+  };
+
+  socket.onmessage = (event) => {
+      question = JSON.parse(event.data);
+      if(question.eventType == 'newQuestion'){
+        addQuestionToDom(question);
+      }
+      if(question.eventType == 'updateQuestion' && question.status == 'unresolved'){
+        addQuestionToDom(question);
+      }
+      if(question.eventType == 'updateQuestion' && question.status == 'claimed'){
+        removeQuestionFromDom(question);
+      }
+  };
+
+  // Handle WebSocket errors
+  socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+  };
+
+  // Handle connection closure
+  socket.onclose = () => {
+      console.log('WebSocket connection closed');
+  };
+
+  function addQuestionToDom(question){
+    console.log('reached function');
+    const noQuestions = document.getElementsByClassName('noQuestions')[1];
+    let questionGrid;
+    if(noQuestions){
+      noQuestions.remove();
+      questionGrid = document.createElement('div');
+      questionGrid.classList.add('question-grid');
+      const queueContainer = document.getElementsByClassName('queue-container')[0];
+      queueContainer.appendChild(questionGrid);
+    }else{
+      questionGrid = document.getElementsByClassName('question-grid')[0];
+    }
+    
+    const questionContainer = document.createElement('div')
+    questionContainer.classList.add('question-card');
+    questionContainer.id = question.id;
+
+    const cardHeader = document.createElement('div');
+    cardHeader.classList.add('card-header');
+    const tag = document.createElement('span');
+    tag.classList.add('tag');
+    tag.textContent = question.tag;
+    const studentName = document.createElement('span');
+    studentName.classList.add('student-name');
+    studentName.textContent = question.fullName;
+    cardHeader.appendChild(tag);
+    cardHeader.appendChild(studentName);
+
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+    const text = document.createElement('p');
+    text.classList.add('question-text');
+    text.textContent = question.text;
+    cardBody.appendChild(text);
+
+    const cardFooter = document.createElement('div');
+    cardFooter.classList.add('card-footer');
+    const submitForm = document.createElement('form');
+    submitForm.classList.add('claim-form');
+    submitForm.method = "POST";
+    submitForm.action = "/courses/" + question.courseId + "/questions" + question.id + "?_method=PUT"
+    const btn = document.createElement('button');
+    btn.classList.add('claim-button');
+    btn.type = "submit";
+    btn.value = "claimed";
+    btn.name = "status";
+    btn.textContent = "Claim";
+    submitForm.appendChild(btn);
+    cardFooter.appendChild(submitForm);
+
+    questionContainer.appendChild(cardHeader);
+    questionContainer.appendChild(cardBody);
+    questionContainer.appendChild(cardFooter);
+    questionGrid.appendChild(questionContainer);
+
+    console.log('addition complete');
+  }
+
+  function removeQuestionFromDom(question){
+    const questionContainer = document.getElementById(question.id);
+    questionContainer.remove();
+
+    const questionGrid = document.getElementsByClassName('question-grid')[0];
+    const questionContainers = document.getElementsByClassName('question-card');
+    if(questionContainers.length == 0){
+      const p = document.createElement('p')
+      p.classList.add('noQuestions');
+      p.textContent = "There are no questions to display."
+      queueContainer = document.getElementsByClassName('queue-container')[0];
+      questionGrid.remove();
+      queueContainer.appendChild(p);
+    }
+  }
+</script>
 <%- include('../partials/footer.ejs')%>

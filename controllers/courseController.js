@@ -1,6 +1,8 @@
 const e = require('connect-flash');
 const {Course, Schedule, User, Roster, Question} = require('../models/index.js');
-const { v4: uuidv4 } = require('uuid');
+
+const { Op } = require('sequelize');
+const {broadcast} = require('../app.js');
 
 exports.index = (req, res, next) => {
     const userId = req.session.user;
@@ -70,9 +72,24 @@ exports.getCourse = (req, res, next) => {
                 if(role == 'student'){
                     res.render('./officeHours/question', {course});
                 }else{
-                    //Part of story 29 - view office hours queue
-                    //Will get questions before rendering in that branch
-                    res.render('./officeHours/course', {course});
+                    Question.findAll({
+                        where: {
+                          CourseId: cid,
+                          status: {
+                            [Op.or]: ['unclaimed', 'unresolved'] 
+                          }
+                        },
+                        include: [
+                            {
+                              model: User, // Assuming `User` is the Sequelize model for the user table
+                              attributes: ['fullName'] // Specify the column(s) you want to include from the User table
+                            }
+                        ],
+                        order: [['createdAt', 'ASC']]
+                    }).then(questions => {
+                        res.render('./officeHours/course', {questions, course})
+                      })
+                      .catch(err => next(err));
                 }
             }else{
                 req.flash('error', 'You are not enrolled in this course');
@@ -274,13 +291,121 @@ exports.createQuestion = (req, res, next) => {
                 req.flash('error', 'User is not enrolled in this course.');
                 return res.redirect(`/courses/${courseId}`);
             }
-
             // Create the question if user is enrolled
-            return Question.create({ courseId, userId, text, tag });
+
+            Question.create({ courseId, userId, text, tag })
+            .then(question => {
+                User.findOne({where: {id: userId}, attributes: ['fullName']})
+                .then(user => {
+                    const questionData = {
+                        eventType: 'newQuestion',  
+                        text: question.text,
+                        tag: question.tag,
+                        fullName: user.fullName,
+                        id: question.id,
+                        courseId: question.courseId
+                    };
+                    req.broadcast(JSON.stringify(questionData));
+                    req.flash('success', 'Question created successfully.');
+                    res.redirect(`/courses/${courseId}`);
+                })
+            })
+            .catch(err => next(err));
+        }).catch(err => next(err));
+};
+
+exports.updateStatus = (req, res, next) => {
+    const { id: courseId, qid } = req.params; // Extract courseId and qid from the request parameters
+    const status = req.body.status; // Extract status from the button value in the request body
+    let fullName;
+    console.log(status);
+
+    if (status === 'claimed') {
+        Course.findByPk(courseId)
+            .then(course => {
+                Question.findOne({ where: { id: qid, courseId: courseId }})
+                    .then(question => {
+                        if (!question) {
+                            req.flash('error', 'Question not found.');
+                            return res.redirect(`/courses/${courseId}`);
+                        }
+                        
+                        const questionData = {
+                            eventType: 'updateQuestion', 
+                            status: status,
+                            text: question.text,
+                            tag: question.tag,
+                            id: question.id,
+                            courseId: question.courseId
+                        };
+                        req.broadcast(JSON.stringify(questionData));
+                        question.status = status;
+                        return question.save()
+                            .then(() => {
+                                // Render AFTER CLAIM view with course and updated question data
+                                res.render('./officeHours/claim', { course, question });
+                            });
+                    })
+                    .catch(err => { next(err); });
+            })
+            .catch(err => { next(err); });
+    } else {
+        Question.findByPk(qid, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['fullName'] // Include only the fullName attribute
+                }
+            ]
         })
-        .then(() => {
-            req.flash('success', 'Question created successfully.');
+        .then((question) => {
+            if (!question) {
+                req.flash('error', 'Question not found.');
+                return res.redirect(`/courses/${courseId}`);
+            }
+            fullName = question.user.fullName;
+            if (status === 'resolved') {
+                // Delete the question if the status is resolved
+                return question
+                    .destroy()
+                    .then(() => {
+                        req.flash('success', 'Question resolved and removed from the queue.');
+                        res.redirect(`/courses/${courseId}`);
+                    });
+            } else {
+                // Update the status for other values
+                question.status = status;
+                return question.save();
+            }
+        })
+        .then((updatedQuestion) => {
+            if (!updatedQuestion) return; // If resolved, the question is deleted, so no further action is needed
+            
+            const questionData = {
+                eventType: 'updateQuestion', 
+                status: status, 
+                text: updatedQuestion.text,
+                tag: updatedQuestion.tag,
+                fullName: fullName,
+                id: updatedQuestion.id,
+                courseId: updatedQuestion.courseId
+            };
+
+            req.broadcast(JSON.stringify(questionData));
+            // Set appropriate flash message based on the new status
+            if (status === 'unresolved') {
+                req.flash('success', 'Status has been updated to unresolved. Student added back to queue.');
+                res.redirect(`/courses/${courseId}`);
+            } else {
+                req.flash('error', 'Invalid status value.');
+                res.redirect(`/courses/${courseId}`);
+            }
+
+        })
+        .catch((error) => {
+            console.log('Error updating question status:', error);
+            req.flash('error', 'An unexpected error occurred while updating the status.');
             res.redirect(`/courses/${courseId}`);
-        })
-        .catch(err => next(err));
+        });
+    }
 };
