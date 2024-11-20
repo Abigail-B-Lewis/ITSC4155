@@ -185,7 +185,7 @@ exports.createSchedule = (req, res, next) => {
                 .then(schedule =>{
                     console.log('Schedule created successfully');
                     req.flash("success", "Schedule created successfully");
-                    res.redirect('/courses/' + courseId);  // Redirect to relevant page - to be changed?
+                    res.redirect('/courses/' + courseId + "/schedule");  // Redirect to relevant page - to be changed?
                     return schedule;
                 })
                 .catch(error => {
@@ -285,14 +285,13 @@ exports.createQuestion = (req, res, next) => {
     const userId = req.session.user;
     const courseId = req.params.id;
 
-    Roster.findOne({ where: { userId, courseId } })
-        .then(roster => {
+    Roster.findOne({where: { userId,courseId}})
+    .then(roster => {
             if (!roster) {
                 req.flash('error', 'User is not enrolled in this course.');
                 return res.redirect(`/courses/${courseId}`);
             }
             // Create the question if user is enrolled
-
             Question.create({ courseId, userId, text, tag })
             .then(question => {
                 User.findOne({where: {id: userId}, attributes: ['fullName']})
@@ -307,7 +306,10 @@ exports.createQuestion = (req, res, next) => {
                     };
                     req.broadcast(JSON.stringify(questionData));
                     req.flash('success', 'Question created successfully.');
-                    res.redirect(`/courses/${courseId}`);
+                    Course.findByPk(courseId)
+                    .then(course => {
+                        res.render('./officeHours/afterquestion', {course});
+                    }).catch(err => next(err))
                 })
             })
             .catch(err => next(err));
@@ -323,8 +325,16 @@ exports.updateStatus = (req, res, next) => {
     if (status === 'claimed') {
         Course.findByPk(courseId)
             .then(course => {
-                Question.findOne({ where: { id: qid, courseId: courseId }})
-                    .then(question => {
+                Question.findOne({
+                    where: { 
+                        id: qid, 
+                        courseId: courseId 
+                    },
+                    include: [{
+                        model: User, 
+                        attributes: ['fullName'] 
+                    }]
+                }).then(question => {
                         if (!question) {
                             req.flash('error', 'Question not found.');
                             return res.redirect(`/courses/${courseId}`);
@@ -336,7 +346,7 @@ exports.updateStatus = (req, res, next) => {
                             text: question.text,
                             tag: question.tag,
                             id: question.id,
-                            courseId: question.courseId
+                            courseId: question.courseId,
                         };
                         req.broadcast(JSON.stringify(questionData));
                         question.status = status;

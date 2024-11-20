@@ -19,8 +19,7 @@ use officeq;
 
 
 # SETUP part 2
-- if testing, first run nodemon app to create models in your database
-- Then, paste the code from SQL/mockdata into your MySQL workbench and run. This will add mockdata to your local database instance (we don't have this yet!)
+- run npm test in order to run unit tests
 
 # Pushing to Git
 - Before pushing to git, make sure to delete the node_modules folder

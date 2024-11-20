@@ -1,6 +1,9 @@
 <%- include('../partials/header.ejs') %>
 <main>
     <div class="course-header">
+        <form class="back-form" method="GET" action="/courses/<%= course.id %>">
+            <button class ='back-btn' type="submit">Back</button>
+        </form>
         <h2>Welcome to Office Hours for <%= course.courseName %></h2>
         <% if(role == 'ia' || role == 'instructor'){%>
             <a class="button" id="add-schedule-button">Add Schedule</a>
