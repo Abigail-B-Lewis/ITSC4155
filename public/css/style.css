@@ -625,3 +625,54 @@ input[type="submit"]{
 .question-container button:hover {
   background-color: #8c7b50; /* Darker shade for hover effect */
 }
+
+/*Styling for claim view student question*/
+.student-question-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+/*Styling for claim view labels*/
+.student-question-container label{
+  font-size: 1em;
+  color: #053f0e; 
+  display: block;
+  margin-bottom: 5px;
+}
+
+/*Styling for information rows*/
+.student-info-row, .question-info-row {
+  margin-bottom: 15px;
+}
+
+.question-info-row p {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  resize: vertical;
+  background-color: #f7f7f7; 
+}
+
+.student-question-container button{
+  background-color: #A49665;
+  color: black;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+}
+
+.student-question-container button:hover {
+  background-color: #8c7b50; 
+}
+
+
