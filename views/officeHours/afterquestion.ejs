@@ -1,0 +1,15 @@
+<%- include('../partials/header.ejs') %>
+<main>
+    <div class="course-header">
+        <h2>Welcome to <%= course.courseName %></h2>
+        <a href="/courses/<%= course.id %>/schedule" class="button" id="add-schedule-button">View Schedule</a>
+    </div>
+    <div class="after-question-message">
+        <p>
+            <span>Your question is added to the Queue!</span>
+            <span>Please wait for an IA to assist you.</span>
+            <span>We appreciate your patience.</span>
+        </p>
+    </div>
+</main>
+<%- include('../partials/footer.ejs') %>

@@ -433,6 +433,11 @@ input[type="submit"]{
   border: 1px solid #ccc;
 }
 
+/*Styling for after question form is submitted by student*/
+.after-question-message p span{
+  display: block;
+}
+=======
 .apply{
   width: 45%;
   margin-top: 1rem;
@@ -715,5 +720,3 @@ input[type="submit"]{
 .student-question-container button:hover {
   background-color: #8c7b50; 
 }
-
-
