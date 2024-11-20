@@ -307,7 +307,6 @@ input[type="submit"]{
 }
 
 /*Schedule Page Header*/
-
 .course-header {
   display: flex;
   flex-direction: row;
@@ -433,6 +432,7 @@ input[type="submit"]{
   background-color: #f7f7f7;
   border: 1px solid #ccc;
 }
+
 .apply{
   width: 45%;
   margin-top: 1rem;
@@ -473,3 +473,247 @@ input[type="submit"]{
 #filterByTags{
   text-align: center;
 }
+
+/* Queue styles */
+.queue-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.question-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.question-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: relative;
+  overflow: hidden; /* Prevent overflow of button or any other elements */
+  width: 300px; /* Fixed width for consistent card size */
+  height: 250px; /* Fixed height for consistent card size */
+}
+
+/* Header Section */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tag {
+  background-color: #999;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.student-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Body Section */
+.card-body {
+  flex-grow: 1; /* Ensures it takes up remaining space */
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center; /* Center aligns text vertically and horizontally */
+}
+
+.question-text {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  word-wrap: break-word; /* Prevents overflow for long text */
+  max-height: 70px; /* Ensures text doesn't exceed space */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Footer Section */
+.card-footer {
+  text-align: right;
+}
+
+/* Claim Form */
+.claim-form {
+  display: inline; 
+  margin: 0;      
+  padding: 0;  
+  border: none;   
+  background: none; 
+}
+
+/* Button Styles */
+.claim-button {
+  background-color: #A49665;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  width: 100px;
+}
+
+.claim-button:hover {
+  background-color: #8c7b50;/
+}
+
+/* No Questions */
+.noQuestions {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  margin: 0.5rem;
+}
+
+/* styles the add a question form */
+/* Style for the entire question container */
+.question-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+/* Header for the form */
+.question-container h3 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #444; 
+}
+
+/* Styling the description text */
+.question-container p {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* Styling the form rows */
+.question-row, .tag-row {
+  margin-bottom: 15px;
+}
+
+/* Style for form labels */
+.question-container label {
+  font-size: 1em;
+  color: #053f0e; 
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Style for the textarea */
+.question-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  resize: vertical;
+  background-color: #f7f7f7; 
+}
+
+/* Style for the select dropdown */
+.question-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  background-color: #f7f7f7; 
+}
+
+/* Style for the submit button */
+.question-container button {
+  padding: 8px 16px;
+  background-color: #A49665;
+  color: black;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100px;
+  display: block; /* Ensures the button is block-level for centering */
+  margin: 10px auto;
+}
+
+.question-container button:hover {
+  background-color: #8c7b50; /* Darker shade for hover effect */
+}
+
+/*Styling for claim view student question*/
+.student-question-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+/*Styling for claim view labels*/
+.student-question-container label{
+  font-size: 1em;
+  color: #053f0e; 
+  display: block;
+  margin-bottom: 5px;
+}
+
+/*Styling for information rows*/
+.student-info-row, .question-info-row {
+  margin-bottom: 15px;
+}
+
+.question-info-row p {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  resize: vertical;
+  background-color: #f7f7f7; 
+}
+
+.student-question-container button{
+  background-color: #A49665;
+  color: black;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+}
+
+.student-question-container button:hover {
+  background-color: #8c7b50; 
+}
+
+

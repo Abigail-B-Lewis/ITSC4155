@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = (sequelize, Sequelize) => {
     const Question = sequelize.define('question', {
         id: {
@@ -8,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         courseId: {
             type: Sequelize.UUID,
-            allowNull: false,
+            allowNull: false,   
             references: {
                 model: 'courses',
                 key: 'id'
@@ -58,6 +60,16 @@ module.exports = (sequelize, Sequelize) => {
         }
     }, {
         timestamps: false,
+        hooks: {
+            beforeValidate: async (question) => {
+                question.id = uuidv4();
+            },
+            //Should maybe do auto timestamps, and sort questions by UpdatedAt instead of createdAt
+            //To avoid this, and have the name be fully logical
+            beforeSave: async (question) => {
+                question.createdAt = new Date();
+            }
+        }
     });
 
     return Question;
