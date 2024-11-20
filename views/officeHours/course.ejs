@@ -6,6 +6,28 @@
     </div> 
     <div class="queue-container"> 
         <p class="noQuestions">Here is where you will find information about the queue</p>
+        <div class="filter-options">
+            <p id="filterByTags">Filter by tags:</p>
+            <div class="filter">
+                <div class="lab">
+                    <input type="checkbox" id="lab" name="lab" />
+                    <label for="lab">Lab</label>
+                </div>
+                <div class="quiz">
+                    <input type="checkbox" id="prepwork" name="prepwork" />
+                    <label for="prepwork">Prepwork</label>
+                </div>
+                <div class="prepwork">
+                    <input type="checkbox" id="quiz" name="quiz" />
+                    <label for="quiz">Quiz</label>
+                </div>
+                <div class="other">
+                    <input type="checkbox" id="other" name="other" />
+                    <label for="other">Other</label>
+                </div>
+            </div>
+            <button type="submit" class="apply">Apply</button>
+        </div>
         <% if (questions.length) { %>
             <div class="question-grid">
                 <% questions.forEach(question => { %>
@@ -28,9 +50,44 @@
         <% } else { %>
             <p class="noQuestions">There are no questions to display.</p>
         <% } %>
+    </div> 
     </div>
-</main> 
+</main>
 <script>
+    const filters = document.querySelectorAll("input[type=submit]");
+    for(let filter of filters){
+        filter.addEventListener('change', filterSchedule);
+    }
+/* This function allows a user to apply filters to the schedule page */
+function filterSchedule(){
+    let filterFor = [];
+    let count = 0;
+    /*iterates through filters and adds checked filters to an array. if a filter is unchecked, count increments */
+    for(let filter of filters){
+        if(filter.checked){
+            filterFor.push(filter.id);
+        }else{
+            count += 1
+        }
+    }
+    /*If the count of unchecked filters is equal to the length of the filter array (no filters are checked), then closed is removed from all item classlists and the function ends. Default is all items show */
+    if(count === filters.length){
+        for(let item of scheduleItems){
+            item.classList.remove('closed');
+        }
+        return;
+    }
+    /* Iterates through the filters and scheduleItems. If the current schedule item contains the current filter then remove the 'closed' class (so it should be displayed). Otherwise, you add the closed class so that unchecked filters are not displayed */
+for(let filter of filterFor){
+    for(let item of scheduleItems){
+        if(item.classList.contains(filter)){
+            item.classList.remove('closed')
+        }else{
+            item.classList.add('closed');
+        }
+    }
+}
+}
   const socket = new WebSocket('ws://localhost:3000');
 
   socket.onopen = () => {
@@ -134,6 +191,5 @@
       queueContainer.appendChild(p);
     }
   }
-
 </script>
 <%- include('../partials/footer.ejs')%>
