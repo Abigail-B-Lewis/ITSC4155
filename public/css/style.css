@@ -433,3 +433,8 @@ input[type="submit"]{
   background-color: #f7f7f7;
   border: 1px solid #ccc;
 }
+
+/*Styling for after question form is submitted by student*/
+.after-question-message p span{
+  display: block;
+}
