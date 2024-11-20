@@ -320,13 +320,35 @@ exports.updateStatus = (req, res, next) => {
     let fullName;
     console.log(status);
 
-    Question.findByPk(qid, {
-        include: [
-            {
-                model: User,
-                attributes: ['fullName'] // Include only the fullName attribute
-            }
-        ]
+    if (status === 'claimed') {
+        Course.findByPk(courseId)
+            .then(course => {
+                Question.findOne({ where: { id: qid, courseId: courseId } })
+                    .then(question => {
+                        if (!question) {
+                            req.flash('error', 'Question not found.');
+                            return res.redirect(`/courses/${courseId}`);
+                        }
+                        
+                        // Update the status to 'claimed'
+                        question.status = status;
+                        return question.save()
+                            .then(() => {
+                                // Render AFTER CLAIM view with course and updated question data
+                                res.render('./officeHours/dummy', { course, question });
+                            });
+                    })
+                    .catch(err => { next(err); });
+            })
+            .catch(err => { next(err); });
+    } else {
+        Question.findByPk(qid, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['fullName'] // Include only the fullName attribute
+                }
+            ]
         })
         .then((question) => {
             if (!question) {
@@ -363,10 +385,7 @@ exports.updateStatus = (req, res, next) => {
 
             req.broadcast(JSON.stringify(questionData));
             // Set appropriate flash message based on the new status
-            if (status === 'claimed') {
-                req.flash('success', 'Status has been updated to claimed. Student removed from queue.');
-                res.redirect(`/courses/${courseId}`); //redirect to the after claim view that najwah makes
-            } else if (status === 'unresolved') {
+            if (status === 'unresolved') {
                 req.flash('success', 'Status has been updated to unresolved. Student added back to queue.');
                 res.redirect(`/courses/${courseId}`);
             } else {
@@ -380,4 +399,5 @@ exports.updateStatus = (req, res, next) => {
             req.flash('error', 'An unexpected error occurred while updating the status.');
             res.redirect(`/courses/${courseId}`);
         });
+    }
 };
