@@ -323,14 +323,30 @@ exports.updateStatus = (req, res, next) => {
     if (status === 'claimed') {
         Course.findByPk(courseId)
             .then(course => {
-                Question.findOne({ where: { id: qid, courseId: courseId } })
+                Question.findOne(
+                    { where: { id: qid, courseId: courseId }, 
+                    include: [
+                    {
+                        model: User,
+                        attributes: ['fullName'] // Include only the fullName attribute
+                    }
+                ]})
                     .then(question => {
                         if (!question) {
                             req.flash('error', 'Question not found.');
                             return res.redirect(`/courses/${courseId}`);
                         }
                         
-                        // Update the status to 'claimed'
+                        const questionData = {
+                            eventType: 'updateQuestion', 
+                            status: status, 
+                            text: question.text,
+                            tag: question.tag,
+                            fullName: question.user.fullName,
+                            id: question.id,
+                            courseId: question.courseId
+                        };
+                        req.broadcast(JSON.stringify(questionData));
                         question.status = status;
                         return question.save()
                             .then(() => {
