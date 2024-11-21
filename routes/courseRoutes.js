@@ -23,7 +23,7 @@ router.get('/join', isLoggedIn, controller.getJoin);
 router.get('/:id', validateId, controller.getCourse);
 
 //gets an individual schedule
-router.get('/:id/schedule', validateId, controller.show);
+router.get('/:id/schedule', validateId, controller.getSchedule);
 
 //post a new schedule to the database
 router.post('/:id/schedule', controller.createSchedule);

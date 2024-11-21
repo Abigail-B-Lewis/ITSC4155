@@ -12,17 +12,12 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      //should probably add enum for this attribute?
       courseSemester: {
         type: Sequelize.STRING,  
         allowNull: false,
         validate: {
             is: /^[A-Za-z]+ \d{4}$/ // Validates format like "Fall 2024"
         }
-    },
-      instructorId: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       studentAccessCode: {
         type: Sequelize.STRING,
@@ -34,7 +29,6 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         unique: true,
       }
-      // TODO: add foreign key link to schedule in sprint 2
     },
     {
         timestamps: false,

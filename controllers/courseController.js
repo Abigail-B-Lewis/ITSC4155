@@ -9,9 +9,21 @@ exports.index = (req, res, next) => {
     const role = req.session.role;
 
     if (role === 'instructor') {
-        // Fetch only the courses created by this instructor
-        Course.findAll({ where: { instructorId: userId } })
-            .then(courses => {
+        Course.findAll({
+            include: {
+                model: User,
+                through: {
+                    model: Roster,
+                    where: {
+                        role: 'instructor',
+                    },
+                },
+                where: {
+                    id: req.session.user, 
+                },
+                attributes: [],
+            },
+          }).then(courses => {
                 res.render('./officeHours/dashboard', { courses, role });
             })
             .catch(error => {
@@ -37,7 +49,7 @@ exports.index = (req, res, next) => {
     }
 };
 
-exports.getCreate = (req, res) => {
+exports.getCreate = (req, res, next) => {
     console.log('reached getCreate');
     res.render('./officeHours/create'); // Render the create.ejs view
 };
@@ -46,10 +58,10 @@ exports.createCourse = (req, res, next) => {
     let course = req.body;  
     console.log(course);  
     console.log(req.session.user);
-    Course.create({courseName: course.courseName, courseSemester: course.courseSemester, instructorId: req.session.user , studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
+    Course.create({courseName: course.courseName, courseSemester: course.courseSemester, studentAccessCode: course.studentAccessCode, iaAccessCode: course.iaAccessCode})
     .then(course => {
         //where to redirect once course is created?
-        Roster.create({courseId: course.id, userId: course.instructorId, role: 'instructor'})
+        Roster.create({courseId: course.id, userId: req.session.user, role: 'instructor'})
         .then(roster => console.log("The roster is" + roster))
         .catch(err => next(err))
         req.flash('success', 'course created successfully!');
@@ -100,7 +112,7 @@ exports.getCourse = (req, res, next) => {
     .catch(err => next(err))
 }
 
-exports.show = (req, res, next) => {
+exports.getSchedule = (req, res, next) => {
     let courseId = req.params.id;
     let userId = req.session.user;
     let role;
