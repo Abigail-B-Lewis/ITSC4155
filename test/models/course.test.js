@@ -21,14 +21,12 @@ describe('Course Model', () => {
             const course = await Course.create({
                 courseName: 'Test Course',
                 courseSemester: 'Spring 2025',
-                instructorId: 'John Doe',
                 studentAccessCode: 'testCode1',
                 iaAccessCode: 'testCode2',
             });
 
             expect(course.courseName).toBe('Test Course');
             expect(course.courseSemester).toBe('Spring 2025');
-            expect(course.instructorId).toBe('John Doe');
             expect(course.studentAccessCode).toBe('testCode1');
             expect(course.iaAccessCode).toBe('testCode2');
         });
@@ -37,7 +35,6 @@ describe('Course Model', () => {
             await expect(Course.create({
                 courseName: 'Test Course',
                 courseSemester: 'Fall',  // Invalid semester
-                instructorId: 'John Doe',
                 studentAccessCode: 'testCode3',
                 iaAccessCode: 'testCode4'
             })).rejects.toThrow();
