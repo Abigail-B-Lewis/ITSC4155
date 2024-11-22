@@ -566,8 +566,7 @@ input[type="submit"]{
   line-height: 1.4;
   word-wrap: break-word; /* Prevents overflow for long text */
   max-height: 70px; /* Ensures text doesn't exceed space */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-y: scroll;
 }
 
 /* Footer Section */
